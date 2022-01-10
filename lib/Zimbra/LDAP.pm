@@ -8,7 +8,7 @@ use Net::LDAP;
 
 my $ERROR;
 my $TLSVERIFY = "require";               # "none"
-my $CAPATH    = "/opt/zimbra/conf/ca";
+my $CAPATH    = "/opt/zextras/conf/ca";
 
 =head1 NAME
 

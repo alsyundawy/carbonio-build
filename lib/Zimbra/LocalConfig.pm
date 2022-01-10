@@ -71,7 +71,7 @@ sub error {
 
 Returns the local config file name. Defaults to:
 
-/opt/zimbra/conf/localconfig.xml
+/opt/zextras/conf/localconfig.xml
 
   print $zlc->file, "\n";
 
@@ -79,7 +79,7 @@ Returns the local config file name. Defaults to:
 
 sub file {
     $_[0]->{_file} = $_[1] if ($#_);    # allow new to assign value
-    $_[0]->{_file} = "/opt/zimbra/conf/localconfig.xml"
+    $_[0]->{_file} = "/opt/zextras/conf/localconfig.xml"
       unless ( exists( $_[0]->{_file} ) );    # assign default file;
     return $_[0]->{_file};
 }

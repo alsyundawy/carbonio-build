@@ -49,7 +49,7 @@ sub parse {
   my $self = shift;
   my $file = shift;
   return if ($_PARSED == 1);
-  $file="/opt/zimbra/conf/timezones.ics" if ($file eq "");
+  $file="/opt/zextras/conf/timezones.ics" if ($file eq "");
   open(FILE, "$file") or return undef;
   my $tz;
   while (<FILE>) {

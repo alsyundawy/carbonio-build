@@ -1,5 +1,9 @@
 #!/bin/bash
 
+# SPDX-FileCopyrightText: 2022 Zextras <https://www.zextras.com>
+#
+# SPDX-License-Identifier: AGPL-3.0-only
+
 Copy()
 {
    if [ $# -ne 2 ]
@@ -31,32 +35,3 @@ Cpy2()
 
    cp -f "$src_file" "$dest_dir"
 }
-
-
-CreatePackage()
-{
-    if [ $# -ne 1 ]
-    then
-      echo "Usage: CreatePackage <os-name>" 1>&2
-      exit 1
-    fi
-
-    if [[ $1 == UBUNTU* ]]
-    then
-        CreateDebianPackage
-    elif [[ $1 == RHEL* ]]
-    then
-        CreateRhelPackage
-    else
-        echo "OS not supported. Run using UBUNTU or RHEL system. "
-        exit 1
-    fi
-
-    if [ $? -ne 0 ]; then
-        echo -e "\t### ${currentPackage} package building failed ###" >> ${buildLogFile}
-    else
-        echo -e "\t*** ${currentPackage} package successfully created ***" >> ${buildLogFile}
-    fi
-
-}
-

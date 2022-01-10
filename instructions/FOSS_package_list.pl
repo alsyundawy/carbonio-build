@@ -1,13 +1,11 @@
+# SPDX-FileCopyrightText: 2022 Zextras <https://www.zextras.com>
+#
+# SPDX-License-Identifier: AGPL-3.0-only
+
 @ENTRIES = (
-   "zimbra-core",
-   "zimbra-ldap",
-   "zimbra-logger",
-   "zimbra-mta",
-   "zimbra-dnscache",
-   "zimbra-snmp",
-   "zimbra-store",
-   "zimbra-apache",
-   "zimbra-spell",
-   "zimbra-proxy",
-   "zimbra-imapd",
+   "carbonio-core",
+   "carbonio-directory-server",
+   "carbonio-logger",
+   "carbonio-mta",
+   "carbonio-appserver",
 );

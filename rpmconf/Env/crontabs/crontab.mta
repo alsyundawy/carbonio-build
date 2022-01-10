@@ -4,33 +4,33 @@
 #
 # Queue logging
 #
-0,10,20,30,40,50 * * * * /opt/zimbra/libexec/zmqueuelog
+0,10,20,30,40,50 * * * * /opt/zextras/libexec/zmqueuelog
 #
 # Spam training
 #
-0 22 * * * /opt/zimbra/bin/zmtrainsa >> /opt/zimbra/log/spamtrain.log 2>&1
+0 22 * * * /opt/zextras/bin/zmtrainsa >> /opt/zextras/log/spamtrain.log 2>&1
 #
 # Spam training cleanup
 #
-45 23 * * * /opt/zimbra/bin/zmtrainsa --cleanup >> /opt/zimbra/log/spamtrain.log 2>&1
+45 23 * * * /opt/zextras/bin/zmtrainsa --cleanup >> /opt/zextras/log/spamtrain.log 2>&1
 #
 # Spam rule updates
 #
-45 0 * * * . /opt/zimbra/.bashrc; /opt/zimbra/libexec/zmsaupdate
+45 0 * * * . /opt/zextras/.bashrc; /opt/zextras/libexec/zmsaupdate
 #
 # Spam Bayes auto-expiry
 #
-20 23 * * * /opt/zimbra/common/bin/sa-learn --dbpath /opt/zimbra/data/amavisd/.spamassassin --force-expire --sync > /dev/null 2>&1 
+20 23 * * * /opt/zextras/common/bin/sa-learn --dbpath /opt/zextras/data/amavisd/.spamassassin --force-expire --sync > /dev/null 2>&1 
 # 
 # Clean up amavisd/tmp
 #
-15 5,20 * * * find /opt/zimbra/data/amavisd/tmp -maxdepth 1 -type d -name 'amavis-*' -mtime +1 -exec rm -rf {} \; > /dev/null 2>&1
+15 5,20 * * * find /opt/zextras/data/amavisd/tmp -maxdepth 1 -type d -name 'amavis-*' -mtime +1 -exec rm -rf {} \; > /dev/null 2>&1
 #
 # Clean up the quarantine dir
 #
-0 1 * * * find /opt/zimbra/data/amavisd/quarantine -type f -mtime +7 -exec rm -f {} \; > /dev/null 2>&1
+0 1 * * * find /opt/zextras/data/amavisd/quarantine -type f -mtime +7 -exec rm -f {} \; > /dev/null 2>&1
 #
 #
 #
-35 3 * * * /opt/zimbra/bin/zmcbpadmin --cleanup >/dev/null 2>&1
+35 3 * * * /opt/zextras/bin/zmcbpadmin --cleanup >/dev/null 2>&1
 
