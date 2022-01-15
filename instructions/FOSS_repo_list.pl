@@ -32,7 +32,6 @@
    { name => "zm-postfix" },
    { name => "zm-proxy-config-admin-zimlet" },
    { name => "zm-taglib" },
-   { name => "zm-timezones" },
    { name => "zm-viewmail-admin-zimlet" },
    { name => "zm-web-client" },
    { name => "zm-zcs" },
