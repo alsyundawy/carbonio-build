@@ -10,9 +10,9 @@
 #-------------------- Configuration ---------------------------
 
 currentScript=$(basename $0 | cut -d "." -f 1)                 # carbonio-directory-server
-currentPackage=$(echo ${currentScript}build | cut -d "-" -f 2) # ldapbuild
+currentPackage=$(echo ${currentScript}/build | cut -d "-" -f 2) # ldapbuild
 
-ldapSchemaDir=${repoDir}/zm-ldap-utilities/build/dist
+ldapSchemaDir=${repoDir}/ldap-resources/build/dist
 
 #-------------------- Build Package ---------------------------
 

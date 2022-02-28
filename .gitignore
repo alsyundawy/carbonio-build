@@ -3,4 +3,9 @@
 # SPDX-License-Identifier: CC0-1.0
 
 .build.last_no_ts
+.build.number
+build.properties
+gradle.properties
+.gradle
 RE/
+build/

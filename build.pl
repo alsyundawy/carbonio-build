@@ -190,27 +190,15 @@ sub InitGlobalBuildVars()
          "$ENV{PATH}"
       );
 
-      my $cc    = DetectPrerequisite("cc");
-      my $cpp   = DetectPrerequisite("c++");
       my $java  = DetectPrerequisite( "java", $ENV{JAVA_HOME} ? "$ENV{JAVA_HOME}/bin" : "" );
       my $javac = DetectPrerequisite( "javac", $ENV{JAVA_HOME} ? "$ENV{JAVA_HOME}/bin" : "" );
-      my $mvn   = DetectPrerequisite("mvn");
-      my $ant   = DetectPrerequisite("ant");
-      my $ruby  = DetectPrerequisite("ruby");
-      my $make  = DetectPrerequisite("make");
 
       $ENV{JAVA_HOME} ||= dirname( dirname( Cwd::realpath($javac) ) );
       $ENV{PATH} = "$ENV{JAVA_HOME}/bin:$ENV{PATH}";
 
       my $fmt2v = " %-35s: %s\n";
-      printf( $fmt2v, "USING javac", "$javac (JAVA_HOME=$ENV{JAVA_HOME})" );
       printf( $fmt2v, "USING java",  $java );
-      printf( $fmt2v, "USING maven", $mvn );
-      printf( $fmt2v, "USING ant",   $ant );
-      printf( $fmt2v, "USING cc",    $cc );
-      printf( $fmt2v, "USING c++",   $cpp );
-      printf( $fmt2v, "USING ruby",  $ruby );
-      printf( $fmt2v, "USING make",  $make );
+      printf( $fmt2v, "USING javac",  $javac );
    }
 
    print "=========================================================================================================\n";
@@ -608,8 +596,8 @@ sub DetectPrerequisite($;$$)
    Die(
       "Prerequisite '$util_name' missing in PATH"
         . "\nTry: "
-        . "\n   [ -f /etc/redhat-release ] && sudo yum install perl-Data-Dumper perl-IPC-Cmd gcc-c++ java-1.8.0-openjdk ant ant-junit ruby maven wget rpm-build createrepo"
-        . "\n   [ -f /etc/redhat-release ] || sudo apt-get install software-properties-common openjdk-8-jdk ant ant-optional ruby git maven build-essential",
+        . "\n   [ -f /etc/redhat-release ] && sudo yum install perl-Data-Dumper perl-IPC-Cmd java-11-openjdk"
+        . "\n   [ -f /etc/redhat-release ] || sudo apt-get install software-properties-common openjdk-11-jdk build-essential",
       "",
       $warn_only
    );
