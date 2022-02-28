@@ -1,0 +1,38 @@
+plugins {
+// Apply the java plugin to add support for Java
+	id 'java'
+}
+
+repositories {
+    mavenCentral()
+    jcenter()
+    maven {
+        url 'https://nexus.bedatadriven.com/content/groups/public/'
+    }
+    maven {
+        url 'https://zextras.jfrog.io/artifactory/public-maven-repo'
+        credentials {
+            username = "${artifactory_user}"
+            password = "${artifactory_password}"
+        }
+    }
+}
+
+dependencies {
+	implementation 'zimbra:zm-soap:+'
+    implementation 'jaxen:jaxen:1.1-beta-10'
+    implementation 'zimbra:zm-certificate-manager-store:+'
+    implementation 'zimbra:zm-clam-scanner-store:+'
+    implementation 'zimbra:zm-gql:+'
+    implementation 'zimbra:zm-ldap-utilities:+'
+    implementation 'zimbra:zm-ldap-utils-store:+'
+    implementation 'zimbra:zm-nginx-lookup-store:+'
+    implementation 'zimbra:zm-taglib:+'
+    implementation 'zimbra:zm-zimlets:+'
+}
+
+task getLibs(type: Sync) {
+    from configurations.compileClasspath
+    from configurations.runtimeClasspath
+    into "$buildDir/dist"
+}

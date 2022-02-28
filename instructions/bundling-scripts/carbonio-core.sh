@@ -419,10 +419,7 @@ main()
    Copy ${repoDir}/zm-mta/zmconfigd/smtpd_sender_login_maps.cf                                      ${repoDir}/zm-build/${currentPackage}/opt/zextras/conf/zmconfigd/smtpd_sender_login_maps.cf
    Copy ${repoDir}/zm-mta/zmconfigd/smtpd_sender_restrictions.cf                                    ${repoDir}/zm-build/${currentPackage}/opt/zextras/conf/zmconfigd/smtpd_sender_restrictions.cf
 
-   Cpy2 ${repoDir}/junixsocket/junixsocket-native/build/junixsocket-native-*.nar                    ${repoDir}/zm-build/${currentPackage}/opt/zextras/lib/
-   Cpy2 ${repoDir}/junixsocket/junixsocket-native/build/libjunixsocket-native-*.so                  ${repoDir}/zm-build/${currentPackage}/opt/zextras/lib/
-
-   Copy ${repoDir}/zm-certificate-manager-store/build/zm-certificate-manager-store*.jar             ${repoDir}/zm-build/${currentPackage}/opt/zextras/lib/ext/com_zimbra_cert_manager/com_zimbra_cert_manager.jar
+   Copy ${repoDir}/zm-build/build/dist/zm-certificate-manager-store*.jar             ${repoDir}/zm-build/${currentPackage}/opt/zextras/lib/ext/com_zimbra_cert_manager/com_zimbra_cert_manager.jar
 }
 
 ############################################################################
