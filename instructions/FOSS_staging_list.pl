@@ -134,13 +134,8 @@
          SysExec("mkdir -p $CFG{BUILD_DIR}/zm-zimlets/build/dist/zimlets");
          SysExec("cp -f build/dist/zimlets/*.zip $CFG{BUILD_DIR}/zm-zimlets/build/dist/zimlets");
          SysExec("mkdir -p $CFG{BUILD_DIR}/zm-zimlets/build/dist");
-         SysExec("cp -f build/dist/lib/zimlettaglib.jar $CFG{BUILD_DIR}/zm-zimlets/build/dist/zimlettaglib.jar");
+         SysExec("cp -f build/zm-zimlets-*.jar $CFG{BUILD_DIR}/zm-zimlets/build/dist/zimlettaglib.jar");
       },
-   },
-   {
-      "dir"         => "zm-web-client",
-      "ant_targets"     => ["pkg"],
-      "deploy_pkg_into" => "bundle",
    },
    {
       "dir"         => "zm-db-conf",
@@ -149,11 +144,6 @@
          SysExec("(cd .. && rsync -az --relative zm-db-conf/src/db/migration $CFG{BUILD_DIR}/)");
          SysExec("(cd .. && rsync -az --relative zm-db-conf/src/db/mysql     $CFG{BUILD_DIR}/)");
       },
-   },
-   {
-      "dir"         => "zm-admin-console",
-      "ant_targets" => ["pkg"],
-      "deploy_pkg_into" => "bundle",
    },
    {
       "dir"         => "zm-amavis",
@@ -191,29 +181,6 @@
          SysExec("mkdir -p $CFG{BUILD_DIR}/zm-ldap-utils-store");
          SysExec("cp -f -r ../zm-ldap-utils-store/build $CFG{BUILD_DIR}/zm-ldap-utils-store");
       },
-   },
-   {
-      "dir"         => "ant-1.7.0-ziputil-patched",
-      "ant_targets" => ["jar"],
-      "stage_cmd"   => undef,
-   },
-   {
-      "dir"         => "ant-tar-patched",
-      "ant_targets" => ["jar"],
-      "stage_cmd"   => undef,
-   },
-   {
-      "dir"         => "ical4j-0.9.16-patched",
-      "ant_targets" => [ "clean-compile", "package" ],
-      "stage_cmd"   => undef,
-   },
-   {
-      "dir"         => "zm-zcs-lib",
-      "ant_targets" => ["dist", "pkg"],
-      "stage_cmd"   => sub {
-         SysExec("(cd .. && rsync -az --relative zm-zcs-lib $CFG{BUILD_DIR}/)");
-      },
-      "deploy_pkg_into" => "bundle",
    },
    {
       "dir"         => "zm-jython",
