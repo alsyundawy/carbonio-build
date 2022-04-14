@@ -1081,9 +1081,20 @@ sub setLdapDefaults {
     $config{HTTPPROXY}             = getLdapServerValue("zimbraReverseProxyHttpEnabled");
     $config{SMTPHOST}              = getLdapServerValue("zimbraSmtpHostname");
 
-
     $config{zimbraReverseProxyLookupTarget} = getLdapServerValue("zimbraReverseProxyLookupTarget")
       if ($config{zimbraReverseProxyLookupTarget} eq "");
+
+
+    if ($config{PUBLICSERVICEHOSTNAME} eq "UNSET") {
+      $config{PUBLICSERVICEHOSTNAME} = getLdapServerValue("zimbraPublicServiceHostname");
+      if ($config{PUBLICSERVICEHOSTNAME} eq "") {
+        $config{PUBLICSERVICEHOSTNAME} = lc(qx(hostname --fqdn));
+        chomp $config{PUBLICSERVICEHOSTNAME};
+        if ($config{PUBLICSERVICEHOSTNAME} eq "") {
+          $config{PUBLICSERVICEHOSTNAME} = "UNSET";
+        }
+      }
+    }
 
     if (isEnabled("carbonio-mta")) {
       my $tmpval = getLdapServerValue("zimbraMtaMyNetworks");
@@ -1587,6 +1598,12 @@ sub setDefaults {
     $config{POPSSLPROXYPORT} = 7995;
     $config{HTTPPROXYPORT} = 8080;
     $config{HTTPSPROXYPORT} = 8443;
+  }
+
+  $config{PUBLICSERVICEHOSTNAME} = lc(qx(hostname --fqdn));
+  chomp $config{PUBLICSERVICEHOSTNAME};
+  if ($config{PUBLICSERVICEHOSTNAME} eq "") {
+    $config{PUBLICSERVICEHOSTNAME} = "UNSET";
   }
 
   if ($options{d}) {
@@ -2553,6 +2570,10 @@ sub changeLdapServerID {
   $config{LDAPSERVERID} = shift;
 }
 
+sub changePublicServiceHostname {
+  $config{PUBLICSERVICEHOSTNAME} = shift;
+}
+
 sub getDnsRecords {
   my $name = shift;
   my $qtype = shift;
@@ -2708,6 +2729,26 @@ sub setPopSSLProxyPort {
   if($config{MAILPROXY} eq "TRUE" || $config{zimbraMailProxy} eq "TRUE") {
     if($config{POPSSLPROXYPORT} == $config{POPSSLPORT}) {
       $config{POPSSLPORT}="UNSET";
+    }
+  }
+}
+
+sub setPublicServiceHostname {
+  my $old = $config{PUBLICSERVICEHOSTNAME};
+  while (1) {
+    $config{PUBLICSERVICEHOSTNAME} =
+        askNonBlank("Please enter the Public Service hostname (FQDN):",
+            $config{PUBLICSERVICEHOSTNAME});
+    if (lookupHostName ($config{PUBLICSERVICEHOSTNAME}, 'A')) {
+      progress("\n\nDNS ERROR resolving $config{PUBLICSERVICEHOSTNAME}\n");
+      progress("It is suggested that the Public Service Hostname be resolvable via DNS\n");
+      if (askYN("Re-Enter Public Service Hostname","Yes") eq "no") {
+        last;
+      }
+      $config{PUBLICSERVICEHOSTNAME} = $old;
+    }
+    else {
+      last;
     }
   }
 }
@@ -3043,6 +3084,12 @@ sub createLdapMenu {
     } else {
       $config{LDAPROOTPASSSET} = "UNSET" unless ($config{LDAPROOTPASSSET} eq "Not Verified");
     }
+    $$lm{menuitems}{$i} = {
+        "prompt" => "Public Service Hostname:",
+        "var" => \$config{PUBLICSERVICEHOSTNAME},
+        "callback" => \&setPublicServiceHostname,
+    };
+    $i++;
     $$lm{menuitems}{$i} = {
       "prompt" => "Ldap root password:",
       "var" => \$config{LDAPROOTPASSSET},
@@ -5023,6 +5070,11 @@ sub configSetProxyPrefs {
        if ( $memcachetargets[0] !~ /:11211/ ) {
          progress("WARNING: There are currently no memcached servers for the proxy.  Proxy will start once one becomes available.\n");
        }
+     }
+     if (!($config{PUBLICSERVICEHOSTNAME} eq "")) {
+       progress("Setting Public Service Hostname $config{PUBLICSERVICEHOSTNAME}...");
+       runAsZextras("$ZMPROV mcf zimbraPublicServiceHostname $config{PUBLICSERVICEHOSTNAME}");
+       progress("done.\n");
      }
    } else {
      runAsZextras("/opt/zextras/libexec/zmproxyconfig -m -d -o ".
