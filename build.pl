@@ -410,8 +410,16 @@ sub Build($)
                         if ( my $targets = $build_info->{ $tool . "_targets" } )    #Known values are: ant_targets, mvn_targets, make_targets
                         {
                            eval { SysExec( $tool, "clean" ) if ( !$ENV{ENV_SKIP_CLEAN_FLAG} ); };
-
-                           SysExec( $tool, @{ $tool_attributes->{$tool} || [] }, @$targets );
+                           # prepare tool call with options and arguments
+                           my @tool_array=($tool);
+                           push(@tool_array, @{ $tool_attributes->{$tool} || [] }, @$targets);
+                           my $tool_call=join(" ", @tool_array);
+                           # execute on bash (having issues when perl not using bash shell)
+                           my $to_exec= "/bin/bash -c '$tool_call'";
+                           if (system($to_exec)!=0){
+                              print "FAILED: $to_exec";
+                              exit 1;
+                           }
                         }
                      }
                   }
