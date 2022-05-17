@@ -418,9 +418,6 @@ main()
    Copy ${repoDir}/zm-mta/zmconfigd/smtpd_relay_restrictions.cf                                     ${repoDir}/zm-build/${currentPackage}/opt/zextras/conf/zmconfigd/smtpd_relay_restrictions.cf
    Copy ${repoDir}/zm-mta/zmconfigd/smtpd_sender_login_maps.cf                                      ${repoDir}/zm-build/${currentPackage}/opt/zextras/conf/zmconfigd/smtpd_sender_login_maps.cf
    Copy ${repoDir}/zm-mta/zmconfigd/smtpd_sender_restrictions.cf                                    ${repoDir}/zm-build/${currentPackage}/opt/zextras/conf/zmconfigd/smtpd_sender_restrictions.cf
-   Copy ${repoDir}/zm-mta/package/carbonio-mta-sidecar.service                                      ${repoDir}/zm-build/${currentPackage}/lib/systemd/system/carbonio-mta-sidecar.service
-   Copy ${repoDir}/zm-mta/package/carbonio-mta.hcl                                                  ${repoDir}/zm-build/${currentPackage}/etc/zextras/service-discover/carbonio-mta.hcl
-   Copy ${repoDir}/zm-mta/package/carbonio-mta                                                      ${repoDir}/zm-build/${currentPackage}/usr/bin/carbonio-mta
 
    Cpy2 ${repoDir}/junixsocket/junixsocket-native/build/junixsocket-native-*.nar                    ${repoDir}/zm-build/${currentPackage}/opt/zextras/lib/
    Cpy2 ${repoDir}/junixsocket/junixsocket-native/build/libjunixsocket-native-*.so                  ${repoDir}/zm-build/${currentPackage}/opt/zextras/lib/
