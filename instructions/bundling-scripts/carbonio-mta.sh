@@ -22,6 +22,10 @@ main() {
   mkdir -p ${repoDir}/zm-build/${currentPackage}/opt/zextras/data/clamav
   mkdir -p ${repoDir}/zm-build/${currentPackage}/opt/zextras/data/opendkim
   mkdir -p ${repoDir}/zm-build/${currentPackage}/opt/zextras/data/postfix
+  # mkdir for consul mta
+  mkdir -p ${repoDir}/zm-build/${currentPackage}/lib/systemd/system
+  mkdir -p ${repoDir}/zm-build/${currentPackage}/etc/zextras/service-discover
+  mkdir -p ${repoDir}/zm-build/${currentPackage}/usr/bin/
 
   echo -e "\tCopy package files"
   cp ${repoDir}/zm-postfix/conf/postfix/master.cf.in             ${repoDir}/zm-build/${currentPackage}/opt/zextras/common/conf/master.cf.in
