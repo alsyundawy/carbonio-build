@@ -42,6 +42,7 @@ main() {
   cp ${repoDir}/zm-mta/package/carbonio-mta.hcl                  ${repoDir}/zm-build/${currentPackage}/etc/zextras/service-discover/carbonio-mta.hcl
   cp ${repoDir}/zm-mta/package/carbonio-mta-setup.sh             ${repoDir}/zm-build/${currentPackage}/etc/zextras/pending-setups.d/carbonio-mta.sh
   cp ${repoDir}/zm-mta/package/policies.json                     ${repoDir}/zm-build/${currentPackage}/etc/carbonio/mta/service-discover/policies.json
+  cp ${repoDir}/zm-mta/package/intentions.json                   ${repoDir}/zm-build/${currentPackage}/etc/carbonio/mta/service-discover/intentions.json
   cp ${repoDir}/zm-mta/package/service-protocol.json             ${repoDir}/zm-build/${currentPackage}/etc/carbonio/mta/service-discover/service-protocol.json
 
 }
