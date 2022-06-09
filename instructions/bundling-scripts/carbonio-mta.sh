@@ -23,11 +23,28 @@ main() {
   mkdir -p ${repoDir}/zm-build/${currentPackage}/opt/zextras/data/opendkim
   mkdir -p ${repoDir}/zm-build/${currentPackage}/opt/zextras/data/postfix
 
+  # mkdir for consul mta
+  mkdir -p ${repoDir}/zm-build/${currentPackage}/usr/bin/
+  mkdir -p ${repoDir}/zm-build/${currentPackage}/lib/systemd/system
+  mkdir -p ${repoDir}/zm-build/${currentPackage}/etc/zextras/service-discover
+  mkdir -p ${repoDir}/zm-build/${currentPackage}/etc/zextras/pending-setups.d
+  mkdir -p ${repoDir}/zm-build/${currentPackage}/etc/carbonio/mta/service-discover
+
   echo -e "\tCopy package files"
-  cp ${repoDir}/zm-postfix/conf/postfix/master.cf.in ${repoDir}/zm-build/${currentPackage}/opt/zextras/common/conf/master.cf.in
-  cp ${repoDir}/zm-postfix/conf/postfix/tag_as_foreign.re.in ${repoDir}/zm-build/${currentPackage}/opt/zextras/common/conf/tag_as_foreign.re.in
+  cp ${repoDir}/zm-postfix/conf/postfix/master.cf.in             ${repoDir}/zm-build/${currentPackage}/opt/zextras/common/conf/master.cf.in
+  cp ${repoDir}/zm-postfix/conf/postfix/tag_as_foreign.re.in     ${repoDir}/zm-build/${currentPackage}/opt/zextras/common/conf/tag_as_foreign.re.in
   cp ${repoDir}/zm-postfix/conf/postfix/tag_as_originating.re.in ${repoDir}/zm-build/${currentPackage}/opt/zextras/common/conf/tag_as_originating.re.in
-  cp -f ${repoDir}/zm-amavis/conf/amavisd/mysql/antispamdb.sql ${repoDir}/zm-build/${currentPackage}/opt/zextras/data/amavisd/mysql/antispamdb.sql
+  cp -f ${repoDir}/zm-amavis/conf/amavisd/mysql/antispamdb.sql   ${repoDir}/zm-build/${currentPackage}/opt/zextras/data/amavisd/mysql/antispamdb.sql
+
+  # consul mta
+  cp ${repoDir}/zm-mta/package/carbonio-mta                      ${repoDir}/zm-build/${currentPackage}/usr/bin/carbonio-mta
+  cp ${repoDir}/zm-mta/package/carbonio-mta-sidecar.service      ${repoDir}/zm-build/${currentPackage}/lib/systemd/system/carbonio-mta-sidecar.service
+  cp ${repoDir}/zm-mta/package/carbonio-mta.hcl                  ${repoDir}/zm-build/${currentPackage}/etc/zextras/service-discover/carbonio-mta.hcl
+  cp ${repoDir}/zm-mta/package/carbonio-mta-setup.sh             ${repoDir}/zm-build/${currentPackage}/etc/zextras/pending-setups.d/carbonio-mta.sh
+  cp ${repoDir}/zm-mta/package/policies.json                     ${repoDir}/zm-build/${currentPackage}/etc/carbonio/mta/service-discover/policies.json
+  cp ${repoDir}/zm-mta/package/intentions.json                   ${repoDir}/zm-build/${currentPackage}/etc/carbonio/mta/service-discover/intentions.json
+  cp ${repoDir}/zm-mta/package/service-protocol.json             ${repoDir}/zm-build/${currentPackage}/etc/carbonio/mta/service-discover/service-protocol.json
+
 }
 
 #-------------------- Util Functions ---------------------------
