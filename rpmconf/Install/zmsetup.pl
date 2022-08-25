@@ -1082,17 +1082,6 @@ sub setLdapDefaults {
     $config{zimbraReverseProxyLookupTarget} = getLdapServerValue("zimbraReverseProxyLookupTarget")
       if ($config{zimbraReverseProxyLookupTarget} eq "");
 
-    # get zimbraPublicServiceHosname from ldap
-    my $zimbraPublicServiceHostnameLdap = getLdapConfigValue("zimbraPublicServiceHostname");
-
-    # if zimbraPublicServiceHosname is already set on ldap...
-    if(!($zimbraPublicServiceHostnameLdap eq "")) {
-      # ...use the ldap value
-      $config{PUBLICSERVICEHOSTNAME} = $zimbraPublicServiceHostnameLdap;
-      # set the flag to avoid overwriting zimbraPublicServiceHostname on ldap
-      $zimbraPublicServiceHostnameAlreadySet = 1;
-    }
-
     if (isEnabled("carbonio-mta")) {
       my $tmpval = getLdapServerValue("zimbraMtaMyNetworks");
       $config{zimbraMtaMyNetworks} = $tmpval
@@ -1104,6 +1093,17 @@ sub setLdapDefaults {
   # Load Global config values
   #
   # default domainname
+  # get zimbraPublicServiceHostname from ldap
+  my $zimbraPublicServiceHostnameLdap = getLdapConfigValue("zimbraPublicServiceHostname");
+
+  # if zimbraPublicServiceHostname is already set on ldap...
+  if(!($zimbraPublicServiceHostnameLdap eq "")) {
+    # ...use the ldap value
+    $config{PUBLICSERVICEHOSTNAME} = $zimbraPublicServiceHostnameLdap;
+    # set the flag to avoid overwriting zimbraPublicServiceHostname on ldap
+    $zimbraPublicServiceHostnameAlreadySet = 1;
+  }
+
   $config{zimbraDefaultDomainName} = getLdapConfigValue("zimbraDefaultDomainName");
   if ($config{zimbraDefaultDomainName} eq "") {
     $config{zimbraDefaultDomainName} = $config{CREATEDOMAIN};
@@ -1237,9 +1237,7 @@ sub setLdapDefaults {
   # debug output
   #
   if ($options{d}) {
-    foreach my $key (sort keys %config) {
-      print "\tDEBUG: $key=$config{$key}\n";
-    }
+    dumpConfig();
   }
   $config{LDAPDEFAULTSLOADED}=1;
   progress ( "done.\n" );
@@ -1605,9 +1603,7 @@ sub setDefaults {
   }
 
   if ($options{d}) {
-    foreach my $key (sort keys %config) {
-      print "\tDEBUG: $key=$config{$key}\n";
-    }
+    dumpConfig();
   }
 
   progress ( "done.\n" );
@@ -5862,6 +5858,12 @@ sub resumeConfiguration {
     applyConfig();
   } else {
     %configStatus = ();
+  }
+}
+
+sub dumpConfig {
+  foreach my $key (sort keys %config) {
+    print "\tDEBUG: $key=$config{$key}\n";
   }
 }
 
