@@ -137,7 +137,6 @@ my $ldapReplica = 0;
 my $starttls = 0;
 my $needNewCert = "";
 my $ssl_cert_type = "self";
-my $zimbraPublicServiceHostnameAlreadySet = 0;
 
 my @ssl_digests = ("ripemd160","sha","sha1","sha224","sha256","sha384","sha512");
 my @interfaces = ();
@@ -192,6 +191,9 @@ setEnabledDependencies();
 
 checkPortConflicts();
 
+getSystemStatus();
+
+startLdap() if ($ldapConfigured);
 
 if (!$newinstall) {
   my $rc = runAsZextras ("/opt/zextras/libexec/zmldapupdateldif");
@@ -1082,15 +1084,16 @@ sub setLdapDefaults {
     $config{zimbraReverseProxyLookupTarget} = getLdapServerValue("zimbraReverseProxyLookupTarget")
       if ($config{zimbraReverseProxyLookupTarget} eq "");
 
-    # get zimbraPublicServiceHosname from ldap
-    my $zimbraPublicServiceHostnameLdap = getLdapConfigValue("zimbraPublicServiceHostname");
 
-    # if zimbraPublicServiceHosname is already set on ldap...
-    if(!($zimbraPublicServiceHostnameLdap eq "")) {
-      # ...use the ldap value
-      $config{PUBLICSERVICEHOSTNAME} = $zimbraPublicServiceHostnameLdap;
-      # set the flag to avoid overwriting zimbraPublicServiceHostname on ldap
-      $zimbraPublicServiceHostnameAlreadySet = 1;
+    if ($config{PUBLICSERVICEHOSTNAME} eq "UNSET") {
+      $config{PUBLICSERVICEHOSTNAME} = getLdapServerValue("zimbraPublicServiceHostname");
+      if ($config{PUBLICSERVICEHOSTNAME} eq "") {
+        $config{PUBLICSERVICEHOSTNAME} = lc(qx(hostname --fqdn));
+        chomp $config{PUBLICSERVICEHOSTNAME};
+        if ($config{PUBLICSERVICEHOSTNAME} eq "") {
+          $config{PUBLICSERVICEHOSTNAME} = "UNSET";
+        }
+      }
     }
 
     if (isEnabled("carbonio-mta")) {
@@ -1597,7 +1600,6 @@ sub setDefaults {
     $config{HTTPSPROXYPORT} = 8443;
   }
 
-  # set default value for zimbraPublicServiceHostname
   $config{PUBLICSERVICEHOSTNAME} = lc(qx(hostname --fqdn));
   chomp $config{PUBLICSERVICEHOSTNAME};
   if ($config{PUBLICSERVICEHOSTNAME} eq "") {
@@ -5071,7 +5073,7 @@ sub configSetProxyPrefs {
          progress("WARNING: There are currently no memcached servers for the proxy.  Proxy will start once one becomes available.\n");
        }
      }
-     if ( (!($config{PUBLICSERVICEHOSTNAME} eq "")) && (!($zimbraPublicServiceHostnameAlreadySet)) ){
+     if (!($config{PUBLICSERVICEHOSTNAME} eq "")) {
        progress("Setting Public Service Hostname $config{PUBLICSERVICEHOSTNAME}...");
        runAsZextras("$ZMPROV mcf zimbraPublicServiceHostname $config{PUBLICSERVICEHOSTNAME}");
        progress("done.\n");
