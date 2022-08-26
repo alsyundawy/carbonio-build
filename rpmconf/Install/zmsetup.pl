@@ -137,6 +137,7 @@ my $ldapReplica = 0;
 my $starttls = 0;
 my $needNewCert = "";
 my $ssl_cert_type = "self";
+my $zimbraPublicServiceHostnameAlreadySet = 0;
 
 my @ssl_digests = ("ripemd160","sha","sha1","sha224","sha256","sha384","sha512");
 my @interfaces = ();
@@ -191,9 +192,6 @@ setEnabledDependencies();
 
 checkPortConflicts();
 
-getSystemStatus();
-
-startLdap() if ($ldapConfigured);
 
 if (!$newinstall) {
   my $rc = runAsZextras ("/opt/zextras/libexec/zmldapupdateldif");
@@ -1084,18 +1082,6 @@ sub setLdapDefaults {
     $config{zimbraReverseProxyLookupTarget} = getLdapServerValue("zimbraReverseProxyLookupTarget")
       if ($config{zimbraReverseProxyLookupTarget} eq "");
 
-
-    if ($config{PUBLICSERVICEHOSTNAME} eq "UNSET") {
-      $config{PUBLICSERVICEHOSTNAME} = getLdapServerValue("zimbraPublicServiceHostname");
-      if ($config{PUBLICSERVICEHOSTNAME} eq "") {
-        $config{PUBLICSERVICEHOSTNAME} = lc(qx(hostname --fqdn));
-        chomp $config{PUBLICSERVICEHOSTNAME};
-        if ($config{PUBLICSERVICEHOSTNAME} eq "") {
-          $config{PUBLICSERVICEHOSTNAME} = "UNSET";
-        }
-      }
-    }
-
     if (isEnabled("carbonio-mta")) {
       my $tmpval = getLdapServerValue("zimbraMtaMyNetworks");
       $config{zimbraMtaMyNetworks} = $tmpval
@@ -1107,6 +1093,17 @@ sub setLdapDefaults {
   # Load Global config values
   #
   # default domainname
+  # get zimbraPublicServiceHostname from ldap
+  my $zimbraPublicServiceHostnameLdap = getLdapConfigValue("zimbraPublicServiceHostname");
+
+  # if zimbraPublicServiceHostname is already set on ldap...
+  if(!($zimbraPublicServiceHostnameLdap eq "")) {
+    # ...use the ldap value
+    $config{PUBLICSERVICEHOSTNAME} = $zimbraPublicServiceHostnameLdap;
+    # set the flag to avoid overwriting zimbraPublicServiceHostname on ldap
+    $zimbraPublicServiceHostnameAlreadySet = 1;
+  }
+
   $config{zimbraDefaultDomainName} = getLdapConfigValue("zimbraDefaultDomainName");
   if ($config{zimbraDefaultDomainName} eq "") {
     $config{zimbraDefaultDomainName} = $config{CREATEDOMAIN};
@@ -1240,9 +1237,7 @@ sub setLdapDefaults {
   # debug output
   #
   if ($options{d}) {
-    foreach my $key (sort keys %config) {
-      print "\tDEBUG: $key=$config{$key}\n";
-    }
+    dumpConfig();
   }
   $config{LDAPDEFAULTSLOADED}=1;
   progress ( "done.\n" );
@@ -1600,6 +1595,7 @@ sub setDefaults {
     $config{HTTPSPROXYPORT} = 8443;
   }
 
+  # set default value for zimbraPublicServiceHostname
   $config{PUBLICSERVICEHOSTNAME} = lc(qx(hostname --fqdn));
   chomp $config{PUBLICSERVICEHOSTNAME};
   if ($config{PUBLICSERVICEHOSTNAME} eq "") {
@@ -1607,9 +1603,7 @@ sub setDefaults {
   }
 
   if ($options{d}) {
-    foreach my $key (sort keys %config) {
-      print "\tDEBUG: $key=$config{$key}\n";
-    }
+    dumpConfig();
   }
 
   progress ( "done.\n" );
@@ -5073,7 +5067,7 @@ sub configSetProxyPrefs {
          progress("WARNING: There are currently no memcached servers for the proxy.  Proxy will start once one becomes available.\n");
        }
      }
-     if (!($config{PUBLICSERVICEHOSTNAME} eq "")) {
+     if ( (!($config{PUBLICSERVICEHOSTNAME} eq "")) && (!($zimbraPublicServiceHostnameAlreadySet)) ){
        progress("Setting Public Service Hostname $config{PUBLICSERVICEHOSTNAME}...");
        runAsZextras("$ZMPROV mcf zimbraPublicServiceHostname $config{PUBLICSERVICEHOSTNAME}");
        progress("done.\n");
@@ -5864,6 +5858,12 @@ sub resumeConfiguration {
     applyConfig();
   } else {
     %configStatus = ();
+  }
+}
+
+sub dumpConfig {
+  foreach my $key (sort keys %config) {
+    print "\tDEBUG: $key=$config{$key}\n";
   }
 }
 
