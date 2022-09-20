@@ -134,6 +134,7 @@ sub InitGlobalBuildVars()
          { name => "DISABLE_TAR",                type => "!",   hash_src => \%cmd_hash, default_sub => sub { return 0; }, },
          { name => "EXCLUDE_GIT_REPOS",          type => "=s",  hash_src => \%cmd_hash, default_sub => sub { return ""; }, },
          { name => "ANT_OPTIONS",                type => "=s",  hash_src => \%cmd_hash, default_sub => sub { return undef; }, },
+         { name => "MVN_OPTIONS",                type => "=s",  hash_src => \%cmd_hash, default_sub => sub { return undef; }, },
          { name => "BUILD_RELEASE_NO_SHORT",     type => "=s",  hash_src => \%cmd_hash, default_sub => sub { my $x = $CFG{BUILD_RELEASE_NO}; $x =~ s/[.]//g; return $x; }, },
          { name => "DESTINATION_NAME",           type => "=s",  hash_src => \%cmd_hash, default_sub => sub { return &$destination_name_func; }, },
          { name => "BUILD_DIR",                  type => "=s",  hash_src => \%cmd_hash, default_sub => sub { return &$build_dir_func; }, },
@@ -370,6 +371,10 @@ sub Build($)
 
    push( @{ $tool_attributes->{ant} }, $CFG{ANT_OPTIONS} )
      if ( $CFG{ANT_OPTIONS} );
+
+   # add options for maven
+   push( @{ $tool_attributes->{mvn} }, $CFG{MVN_OPTIONS} )
+       if ( $CFG{MVN_OPTIONS} );
 
    my $cnt = 0;
    for my $build_info (@ALL_BUILDS)

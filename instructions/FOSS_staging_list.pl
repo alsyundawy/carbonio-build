@@ -168,10 +168,10 @@
    },
    {
       "dir"         => "zm-certificate-manager-store",
-      "ant_targets" => ["jar"],
+      "mvn_targets" => ["package"],
       "stage_cmd"   => sub {
          SysExec("mkdir -p $CFG{BUILD_DIR}/zm-certificate-manager-store");
-         SysExec("cp -f -r ../zm-certificate-manager-store/build $CFG{BUILD_DIR}/zm-certificate-manager-store");
+         SysExec("cp -f -r ../zm-certificate-manager-store/target $CFG{BUILD_DIR}/zm-certificate-manager-store");
       },
    },
    {

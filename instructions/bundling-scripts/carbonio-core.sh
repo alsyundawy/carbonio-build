@@ -423,7 +423,7 @@ main()
    Cpy2 ${repoDir}/junixsocket/junixsocket-native/build/junixsocket-native-*.nar                    ${repoDir}/zm-build/${currentPackage}/opt/zextras/lib/
    Cpy2 ${repoDir}/junixsocket/junixsocket-native/build/libjunixsocket-native-*.so                  ${repoDir}/zm-build/${currentPackage}/opt/zextras/lib/
 
-   Copy ${repoDir}/zm-certificate-manager-store/build/zm-certificate-manager-store*.jar             ${repoDir}/zm-build/${currentPackage}/opt/zextras/lib/ext/com_zimbra_cert_manager/com_zimbra_cert_manager.jar
+   Copy ${repoDir}/zm-certificate-manager-store/target/zm-certificate-manager-store*.jar             ${repoDir}/zm-build/${currentPackage}/opt/zextras/lib/ext/com_zimbra_cert_manager/com_zimbra_cert_manager.jar
 }
 
 ############################################################################
