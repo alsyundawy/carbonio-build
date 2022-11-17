@@ -175,14 +175,6 @@
       },
    },
    {
-      "dir"         => "zm-ldap-utils-store",
-      "ant_targets" => ["jar"],
-      "stage_cmd"   => sub {
-         SysExec("mkdir -p $CFG{BUILD_DIR}/zm-ldap-utils-store");
-         SysExec("cp -f -r ../zm-ldap-utils-store/build $CFG{BUILD_DIR}/zm-ldap-utils-store");
-      },
-   },
-   {
       "dir"         => "zm-jython",
       "ant_targets" => undef,
       "stage_cmd"   => sub {

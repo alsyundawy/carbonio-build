@@ -22,7 +22,6 @@
    { name => "zm-jython" },
    { name => "zm-launcher" },
    { name => "zm-ldap-utilities" },
-   { name => "zm-ldap-utils-store" },
    { name => "zm-mailbox" },
    { name => "zm-mta" },
    { name => "zm-nginx-lookup-store" },
