@@ -50,7 +50,6 @@ main() {
   cp -f ${repoDir}/zm-clam-scanner-store/build/dist/zm-clam-scanner-store*.jar ${repoDir}/zm-build/${currentPackage}/opt/zextras/lib/ext/clamscanner/clamscanner.jar
   cp -f ${repoDir}/zm-nginx-lookup-store/build/dist/zm-nginx-lookup-store*.jar ${repoDir}/zm-build/${currentPackage}/opt/zextras/lib/ext/nginx-lookup/nginx-lookup.jar
   cp -f ${repoDir}/zm-openid-consumer-store/build/dist/guice*.jar ${repoDir}/zm-build/${currentPackage}/opt/zextras/lib/ext/openidconsumer/
-  cp -f ${repoDir}/zm-ldap-utils-store/build/zm-ldap-utils-*.jar ${repoDir}/zm-build/${currentPackage}/opt/zextras/lib/ext/zimbraldaputils/zimbraldaputils.jar
   cp -f ${repoDir}/zm-gql/build/dist/zm-gql*.jar ${repoDir}/zm-build/${currentPackage}/opt/zextras/lib/ext/zm-gql/zmgql.jar
 
   #-------------------- Get wars content (service.war, zimbra.war and zimbraAdmin.war) ---------------------------
