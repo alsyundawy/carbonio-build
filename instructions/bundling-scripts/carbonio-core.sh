@@ -375,7 +375,6 @@ main()
    Copy ${repoDir}/zm-ldap-utilities/conf/externaldirsync/domino.xml                                ${repoDir}/zm-build/${currentPackage}/opt/zextras/conf/externaldirsync/domino.xml
    Copy ${repoDir}/zm-ldap-utilities/conf/externaldirsync/novellGroupWise.xml                       ${repoDir}/zm-build/${currentPackage}/opt/zextras/conf/externaldirsync/novellGroupWise.xml
    Copy ${repoDir}/zm-ldap-utilities/conf/externaldirsync/openldap.xml                              ${repoDir}/zm-build/${currentPackage}/opt/zextras/conf/externaldirsync/openldap.xml
-   Copy ${repoDir}/zm-ldap-utilities/conf/freshclam.conf.in                                         ${repoDir}/zm-build/${currentPackage}/opt/zextras/conf/freshclam.conf.in
    Copy ${repoDir}/zm-ldap-utilities/conf/zmconfigd.cf                                              ${repoDir}/zm-build/${currentPackage}/opt/zextras/conf/zmconfigd.cf
    Copy ${repoDir}/zm-ldap-utilities/conf/zmconfigd.log4j.properties                                ${repoDir}/zm-build/${currentPackage}/opt/zextras/conf/zmconfigd.log4j.properties
    Copy ${repoDir}/zm-ldap-utilities/src/ldap/migration/migrate20110615-AddDynlist.pl               ${repoDir}/zm-build/${currentPackage}/opt/zextras/libexec/scripts/migrate20110615-AddDynlist.pl
