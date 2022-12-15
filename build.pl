@@ -366,6 +366,7 @@ sub Build($)
          "carbonio.buildinfo.version=$CFG{BUILD_RELEASE_NO}_$CFG{BUILD_RELEASE_CANDIDATE}_$CFG{BUILD_NO}",
       ],
       mvn => [
+          "-Dcarbonio.buildinfo.version=$CFG{BUILD_RELEASE_NO}_$CFG{BUILD_RELEASE_CANDIDATE}_$CFG{BUILD_NO}"
       ],
    };
 

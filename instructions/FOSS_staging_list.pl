@@ -5,18 +5,13 @@
 @ENTRIES = (
    {
       "dir"             => "zm-mailbox",
-      "ant_targets"     => ["all"],
+      "mvn_targets"     => ["compile"],
       "deploy_pkg_into" => "bundle",
       "stage_cmd"       => sub {
          SysExec("(cp -r store ../zm-ldap-utilities)");
          SysExec("mkdir -p                                 $CFG{BUILD_DIR}/zm-mailbox/store-conf/");
          SysExec("rsync -az store-conf/conf                $CFG{BUILD_DIR}/zm-mailbox/store-conf/");
       },
-   },
-   {
-      "dir"         => "zm-mailbox/store",
-      "ant_targets" => ["publish-store-test"],
-      "stage_cmd"   => undef,
    },
    {
       "dir"         => "junixsocket/junixsocket-native",

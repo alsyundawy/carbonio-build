@@ -330,6 +330,7 @@ main()
    Copy ${repoDir}/zm-db-conf/src/db/migration/migrate20190611-ZimbraChat.pl                        ${repoDir}/zm-build/${currentPackage}/opt/zextras/libexec/scripts/migrate20190611-ZimbraChat.pl
    Copy ${repoDir}/zm-db-conf/src/db/migration/migrate20210506-BriefcaseApi.pl                      ${repoDir}/zm-build/${currentPackage}/opt/zextras/libexec/scripts/migrate20210506-BriefcaseApi.pl
    Copy ${repoDir}/zm-db-conf/src/db/migration/migrate20210809-UnsubscribeFolder.pl                 ${repoDir}/zm-build/${currentPackage}/opt/zextras/libexec/scripts/migrate20210809-UnsubscribeFolder.pl
+   Copy ${repoDir}/zm-db-conf/src/db/migration/migrate20221110-AddIndexLocatorOnMailItem.pl         ${repoDir}/zm-build/${currentPackage}/opt/zextras/libexec/scripts/migrate20221110-AddIndexLocatorOnMailItem.pl
    Copy ${repoDir}/zm-db-conf/src/db/migration/migrateAmavisLdap20050810.pl                         ${repoDir}/zm-build/${currentPackage}/opt/zextras/libexec/scripts/migrateAmavisLdap20050810.pl
    Copy ${repoDir}/zm-db-conf/src/db/migration/migrateClearSpamFlag.pl                              ${repoDir}/zm-build/${currentPackage}/opt/zextras/libexec/scripts/migrateClearSpamFlag.pl
    Copy ${repoDir}/zm-db-conf/src/db/migration/migrateLargeMetadata.pl                              ${repoDir}/zm-build/${currentPackage}/opt/zextras/libexec/scripts/migrateLargeMetadata.pl
@@ -375,7 +376,6 @@ main()
    Copy ${repoDir}/zm-ldap-utilities/conf/externaldirsync/domino.xml                                ${repoDir}/zm-build/${currentPackage}/opt/zextras/conf/externaldirsync/domino.xml
    Copy ${repoDir}/zm-ldap-utilities/conf/externaldirsync/novellGroupWise.xml                       ${repoDir}/zm-build/${currentPackage}/opt/zextras/conf/externaldirsync/novellGroupWise.xml
    Copy ${repoDir}/zm-ldap-utilities/conf/externaldirsync/openldap.xml                              ${repoDir}/zm-build/${currentPackage}/opt/zextras/conf/externaldirsync/openldap.xml
-   Copy ${repoDir}/zm-ldap-utilities/conf/freshclam.conf.in                                         ${repoDir}/zm-build/${currentPackage}/opt/zextras/conf/freshclam.conf.in
    Copy ${repoDir}/zm-ldap-utilities/conf/zmconfigd.cf                                              ${repoDir}/zm-build/${currentPackage}/opt/zextras/conf/zmconfigd.cf
    Copy ${repoDir}/zm-ldap-utilities/conf/zmconfigd.log4j.properties                                ${repoDir}/zm-build/${currentPackage}/opt/zextras/conf/zmconfigd.log4j.properties
    Copy ${repoDir}/zm-ldap-utilities/src/ldap/migration/migrate20110615-AddDynlist.pl               ${repoDir}/zm-build/${currentPackage}/opt/zextras/libexec/scripts/migrate20110615-AddDynlist.pl
