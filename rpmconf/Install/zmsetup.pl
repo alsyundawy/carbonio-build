@@ -2707,7 +2707,7 @@ sub setStoreMode {
 sub setProxyMode {
     while (1) {
         my $m =
-            askNonBlank("Please enter the proxy server mode (http,https,both,mixed,redirect)",
+            askNonBlank("Please enter the proxy server mode (https,redirect)",
                 $config{PROXYMODE});
         if ($config{zimbra_require_interprocess_security}) {
             if ($m eq "https" || $m eq "redirect") {
@@ -2719,7 +2719,7 @@ sub setProxyMode {
             }
         }
         else {
-            if ($m eq "http" || $m eq "https" || $m eq "mixed" || $m eq "both" || $m eq "redirect") {
+            if ($m eq "https" || $m eq "redirect") {
                 $config{PROXYMODE} = $m;
                 return;
             }
