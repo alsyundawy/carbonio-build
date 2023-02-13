@@ -48,9 +48,6 @@ main()
 
    Copy ${repoDir}/zm-build/rpmconf/Build/get_plat_tag.sh                                           ${repoDir}/zm-build/${currentPackage}/opt/zextras/libexec/get_plat_tag.sh
    Copy ${repoDir}/zm-build/rpmconf/Build/get_plat_tag.sh                                           ${repoDir}/zm-build/${currentPackage}/opt/zextras/libexec/installer/bin/get_plat_tag.sh
-   Copy ${repoDir}/zm-build/rpmconf/Conf/auditswatchrc                                              ${repoDir}/zm-build/${currentPackage}/opt/zextras/conf/auditswatchrc.in
-   Copy ${repoDir}/zm-build/rpmconf/Conf/logswatchrc                                                ${repoDir}/zm-build/${currentPackage}/opt/zextras/conf/logswatchrc
-   Copy ${repoDir}/zm-build/rpmconf/Conf/swatchrc                                                   ${repoDir}/zm-build/${currentPackage}/opt/zextras/conf/swatchrc.in
    Copy ${repoDir}/zm-build/rpmconf/Conf/zmssl.cnf.in                                               ${repoDir}/zm-build/${currentPackage}/opt/zextras/conf/zmssl.cnf.in
    Copy ${repoDir}/zm-build/rpmconf/Env/crontabs/crontab                                            ${repoDir}/zm-build/${currentPackage}/opt/zextras/conf/crontabs/crontab
    Copy ${repoDir}/zm-build/rpmconf/Env/crontabs/crontab.ldap                                       ${repoDir}/zm-build/${currentPackage}/opt/zextras/conf/crontabs/crontab.ldap
@@ -63,8 +60,6 @@ main()
    Copy ${repoDir}/zm-build/rpmconf/Env/zextras.ldaprc                                               ${repoDir}/zm-build/${currentPackage}/opt/zextras/.ldaprc
    Copy ${repoDir}/zm-build/rpmconf/Env/zextras.platform                                             ${repoDir}/zm-build/${currentPackage}/opt/zextras/.platform
    Copy ${repoDir}/zm-build/rpmconf/Env/zextras.viminfo                                              ${repoDir}/zm-build/${currentPackage}/opt/zextras/.viminfo
-   Copy ${repoDir}/zm-build/rpmconf/Img/connection_failed.gif                                       ${repoDir}/zm-build/${currentPackage}/opt/zextras/logger/db/work/connection_failed.gif
-   Copy ${repoDir}/zm-build/rpmconf/Img/data_not_available.gif                                      ${repoDir}/zm-build/${currentPackage}/opt/zextras/logger/db/work/data_not_available.gif
    Copy ${repoDir}/zm-build/rpmconf/Install/postinstall.pm                                          ${repoDir}/zm-build/${currentPackage}/opt/zextras/libexec/postinstall.pm
    Copy ${repoDir}/zm-build/rpmconf/Install/preinstall.pm                                           ${repoDir}/zm-build/${currentPackage}/opt/zextras/libexec/preinstall.pm
    Copy ${repoDir}/zm-build/rpmconf/Install/zmsetup.pl                                              ${repoDir}/zm-build/${currentPackage}/opt/zextras/libexec/zmsetup.pl
@@ -86,7 +81,6 @@ main()
    Copy ${repoDir}/zm-core-utils/src/bin/zmantispamctl                                              ${repoDir}/zm-build/${currentPackage}/opt/zextras/bin/zmantispamctl
    Copy ${repoDir}/zm-core-utils/src/bin/zmantispamdbpasswd                                         ${repoDir}/zm-build/${currentPackage}/opt/zextras/bin/zmantispamdbpasswd
    Copy ${repoDir}/zm-core-utils/src/bin/zmantivirusctl                                             ${repoDir}/zm-build/${currentPackage}/opt/zextras/bin/zmantivirusctl
-   Copy ${repoDir}/zm-core-utils/src/bin/zmauditswatchctl                                           ${repoDir}/zm-build/${currentPackage}/opt/zextras/bin/zmauditswatchctl
    Copy ${repoDir}/zm-core-utils/src/bin/zmblobchk                                                  ${repoDir}/zm-build/${currentPackage}/opt/zextras/bin/zmblobchk
    Copy ${repoDir}/zm-core-utils/src/bin/zmcaldebug                                                 ${repoDir}/zm-build/${currentPackage}/opt/zextras/bin/zmcaldebug
    Copy ${repoDir}/zm-core-utils/src/bin/zmcbpadmin                                                 ${repoDir}/zm-build/${currentPackage}/opt/zextras/bin/zmcbpadmin
@@ -112,9 +106,6 @@ main()
    Copy ${repoDir}/zm-core-utils/src/bin/zmldapupgrade                                              ${repoDir}/zm-build/${currentPackage}/opt/zextras/bin/zmldapupgrade
    Copy ${repoDir}/zm-core-utils/src/bin/zmlmtpinject                                               ${repoDir}/zm-build/${currentPackage}/opt/zextras/bin/zmlmtpinject
    Copy ${repoDir}/zm-core-utils/src/bin/zmlocalconfig                                              ${repoDir}/zm-build/${currentPackage}/opt/zextras/bin/zmlocalconfig
-   Copy ${repoDir}/zm-core-utils/src/bin/zmloggerctl                                                ${repoDir}/zm-build/${currentPackage}/opt/zextras/bin/zmloggerctl
-   Copy ${repoDir}/zm-core-utils/src/bin/zmloggerhostmap                                            ${repoDir}/zm-build/${currentPackage}/opt/zextras/bin/zmloggerhostmap
-   Copy ${repoDir}/zm-core-utils/src/bin/zmlogswatchctl                                             ${repoDir}/zm-build/${currentPackage}/opt/zextras/bin/zmlogswatchctl
    Copy ${repoDir}/zm-core-utils/src/bin/zmmailbox                                                  ${repoDir}/zm-build/${currentPackage}/opt/zextras/bin/zmmailbox
    Copy ${repoDir}/zm-core-utils/src/bin/zmmailboxdctl                                              ${repoDir}/zm-build/${currentPackage}/opt/zextras/bin/zmmailboxdctl
    Copy ${repoDir}/zm-core-utils/src/bin/zmmemcachedctl                                             ${repoDir}/zm-build/${currentPackage}/opt/zextras/bin/zmmemcachedctl
@@ -142,7 +133,6 @@ main()
    Copy ${repoDir}/zm-core-utils/src/bin/zmstat-chart-config                                        ${repoDir}/zm-build/${currentPackage}/opt/zextras/bin/zmstat-chart-config
    Copy ${repoDir}/zm-core-utils/src/bin/zmstatctl                                                  ${repoDir}/zm-build/${currentPackage}/opt/zextras/bin/zmstatctl
    Copy ${repoDir}/zm-core-utils/src/bin/zmstorectl                                                 ${repoDir}/zm-build/${currentPackage}/opt/zextras/bin/zmstorectl
-   Copy ${repoDir}/zm-core-utils/src/bin/zmswatchctl                                                ${repoDir}/zm-build/${currentPackage}/opt/zextras/bin/zmswatchctl
    Copy ${repoDir}/zm-core-utils/src/bin/zmthrdump                                                  ${repoDir}/zm-build/${currentPackage}/opt/zextras/bin/zmthrdump
    Copy ${repoDir}/zm-core-utils/src/bin/zmtlsctl                                                   ${repoDir}/zm-build/${currentPackage}/opt/zextras/bin/zmtlsctl
    Copy ${repoDir}/zm-core-utils/src/bin/zmtotp                                                     ${repoDir}/zm-build/${currentPackage}/opt/zextras/bin/zmtotp
@@ -169,7 +159,6 @@ main()
    Copy ${repoDir}/zm-core-utils/src/libexec/zmcomputequotausage                                    ${repoDir}/zm-build/${currentPackage}/opt/zextras/libexec/zmcomputequotausage
    Copy ${repoDir}/zm-core-utils/src/libexec/zmconfigd                                              ${repoDir}/zm-build/${currentPackage}/opt/zextras/libexec/zmconfigd
    Copy ${repoDir}/zm-core-utils/src/libexec/zmcpustat                                              ${repoDir}/zm-build/${currentPackage}/opt/zextras/libexec/zmcpustat
-   Copy ${repoDir}/zm-core-utils/src/libexec/zmdailyreport                                          ${repoDir}/zm-build/${currentPackage}/opt/zextras/libexec/zmdailyreport
    Copy ${repoDir}/zm-core-utils/src/libexec/zmdbintegrityreport                                    ${repoDir}/zm-build/${currentPackage}/opt/zextras/libexec/zmdbintegrityreport
    Copy ${repoDir}/zm-core-utils/src/libexec/zmdiaglog                                              ${repoDir}/zm-build/${currentPackage}/opt/zextras/libexec/zmdiaglog
    Copy ${repoDir}/zm-core-utils/src/libexec/zmdkimkeyutil                                          ${repoDir}/zm-build/${currentPackage}/opt/zextras/libexec/zmdkimkeyutil
@@ -186,8 +175,6 @@ main()
    Copy ${repoDir}/zm-core-utils/src/libexec/zmiptool                                               ${repoDir}/zm-build/${currentPackage}/opt/zextras/libexec/zmiptool
    Copy ${repoDir}/zm-core-utils/src/libexec/zmjavawatch                                            ${repoDir}/zm-build/${currentPackage}/opt/zextras/libexec/zmjavawatch
    Copy ${repoDir}/zm-core-utils/src/libexec/zmjsprecompile                                         ${repoDir}/zm-build/${currentPackage}/opt/zextras/libexec/zmjsprecompile
-   Copy ${repoDir}/zm-core-utils/src/libexec/zmlogger                                               ${repoDir}/zm-build/${currentPackage}/opt/zextras/libexec/zmlogger
-   Copy ${repoDir}/zm-core-utils/src/libexec/zmloggerinit                                           ${repoDir}/zm-build/${currentPackage}/opt/zextras/libexec/zmloggerinit
    Copy ${repoDir}/zm-core-utils/src/libexec/zmlogprocess                                           ${repoDir}/zm-build/${currentPackage}/opt/zextras/libexec/zmlogprocess
    Copy ${repoDir}/zm-core-utils/src/libexec/zmmsgtrace                                             ${repoDir}/zm-build/${currentPackage}/opt/zextras/libexec/zmmsgtrace
    Copy ${repoDir}/zm-core-utils/src/libexec/zmmtainit                                              ${repoDir}/zm-build/${currentPackage}/opt/zextras/libexec/zmmtainit

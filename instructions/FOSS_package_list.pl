@@ -5,7 +5,6 @@
 @ENTRIES = (
    "carbonio-core",
    "carbonio-directory-server",
-   "carbonio-logger",
    "carbonio-mta",
    "carbonio-appserver",
 );
