@@ -4,3 +4,7 @@
 # process logs
 #
 00,10,20,30,40,50 * * * * /opt/zextras/libexec/zmlogprocess > /tmp/logprocess.out 2>&1
+#
+# Daily reports
+#
+30 23 * * * /opt/zextras/libexec/zmdailyreport -m
