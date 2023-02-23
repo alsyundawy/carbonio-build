@@ -81,10 +81,10 @@
    },
    {
       "dir"         => "zm-nginx-lookup-store",
-      "ant_targets" => ["publish-local"],
+       "mvn_targets" => ["package"],
       "stage_cmd"   => sub {
          SysExec("mkdir -p $CFG{BUILD_DIR}/zm-nginx-lookup-store/build/dist");
-         SysExec("cp -f -rp build/zm-nginx-lookup-store-*.jar $CFG{BUILD_DIR}/zm-nginx-lookup-store/build/dist");
+         SysExec("cp -f -rp target/zm-nginx-lookup-store-*.jar $CFG{BUILD_DIR}/zm-nginx-lookup-store/build/dist");
       },
    },
    {
