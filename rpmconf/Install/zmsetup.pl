@@ -5559,6 +5559,8 @@ sub configCreateDomain {
 
             progress("Setting default domain name...");
             my $rc = setLdapGlobalConfig("zimbraDefaultDomainName", $config{CREATEDOMAIN});
+            progress(($rc == 0) ? "done.\n" : "failed.\n");
+
             progress("Setting value of postfix myorigin...");
             my $rc = setLdapGlobalConfig("zimbraMtaMyOrigin", $config{CREATEDOMAIN});
             progress(($rc == 0) ? "done.\n" : "failed.\n");
@@ -5607,6 +5609,13 @@ sub configCreateDomain {
                 progress(($rc == 0) ? "done.\n" : "failed.\n");
             }
 
+            # set carbonioNotificationFrom & carbonioNotificationRecipients global config attributes
+            progress("Setting infrastrcuture notification sender and recipients accounts...");
+            my $rc = setLdapGlobalConfig(
+                'carbonioNotificationFrom', "$config{CREATEADMIN}",
+                'carbonioNotificationRecipients', "$config{CREATEADMIN}"
+            );
+            progress(($rc == 0) ? "done.\n" : "failed.\n");
         }
 
         if ($config{DOTRAINSA} eq "yes") {
