@@ -1241,7 +1241,7 @@ sub setLdapDefaults {
         if ($config{HTTPPROXY} eq "TRUE") {
 
             # Add proxy component to a configured node
-            if (($config{HTTPPORT} == 80 || $config{HTTPPORT} == 0)  && $config{HTTPPROXYPORT} == 0) {
+            if (($config{HTTPPORT} == 80 || $config{HTTPPORT} == 0) && $config{HTTPPROXYPORT} == 0) {
                 $config{HTTPPROXYPORT} = 80;
             }
 
@@ -1550,12 +1550,11 @@ sub setDefaults {
     $config{CREATEADMINPASS} = $config{LDAPROOTPASS};
 
     if (!$options{c} && $newinstall) {
-        progress "no config file and newinstall checking dns resolution\n" if $options{d};
-
+        progress "no config file and bootstrap mode is newinstall, checking DNS resolution\n" if $options{d};
         if (lookupHostName($config{HOSTNAME}, 'A')) {
             if (lookupHostName($config{HOSTNAME}, 'AAAA')) {
-                progress("\n\nDNS ERROR resolving $config{HOSTNAME}\n");
-                progress("It is suggested that the hostname be resolvable via DNS\n");
+                progress("\n\nDNS ERROR - resolving $config{HOSTNAME}\n");
+                progress("It is suggested that the hostname be resolvable via DNS and the resolved IP address does not point to any loopback device.\n");
                 if (askYN("Change hostname", "Yes") eq "yes") {
                     setHostName();
                 }
@@ -1565,10 +1564,11 @@ sub setDefaults {
         my $good = 0;
 
         if ($config{DOCREATEDOMAIN} eq "yes") {
+
             my $ans = getDnsRecords($config{CREATEDOMAIN}, 'MX');
             if (!defined($ans)) {
-                progress("\n\nDNS ERROR resolving MX for $config{CREATEDOMAIN}\n");
-                progress("It is suggested that the domain name have an MX record configured in DNS\n");
+                progress("\n\nDNS ERROR - resolving \"MX\" for $config{CREATEDOMAIN}\n");
+                progress("It is suggested that the domain name have an \"MX\" record configured in DNS.\n");
                 if (askYN("Change domain name?", "Yes") eq "yes") {
                     setCreateDomain();
                 }
@@ -1600,7 +1600,7 @@ sub setDefaults {
                             }
                         }
                         else {
-                            progress "\n\nDNS ERROR - No A or AAAA record for $config{CREATEDOMAIN}.\n";
+                            progress "\n\nDNS ERROR - No \"A\" or \"AAAA\" record for $config{CREATEDOMAIN}.\n";
                         }
                     }
                 }
@@ -1635,7 +1635,7 @@ sub setDefaults {
                     if ($good) {last;}
                 }
                 if (!$good) {
-                    progress("\n\nDNS ERROR - none of the MX records for $config{CREATEDOMAIN}\n");
+                    progress("\n\nDNS ERROR - none of the \"MX\" records for $config{CREATEDOMAIN}\n");
                     progress("resolve to this host\n");
                     if (askYN("Change domain name?", "Yes") eq "yes") {
                         setCreateDomain();
@@ -1989,8 +1989,8 @@ sub setCreateDomain {
                 $config{CREATEDOMAIN});
         my $ans = getDnsRecords($config{CREATEDOMAIN}, 'MX');
         if (!defined($ans)) {
-            progress("\n\nDNS ERROR resolving MX for $config{CREATEDOMAIN}\n");
-            progress("It is suggested that the domain name have an MX record configured in DNS\n");
+            progress("\n\nDNS ERROR - resolving \"MX\" for $config{CREATEDOMAIN}\n");
+            progress("It is suggested that the domain name have an \"MX\" record configured in DNS.\n");
             if (askYN("Re-Enter domain name?", "Yes") eq "no") {
                 last;
             }
@@ -2023,7 +2023,7 @@ sub setCreateDomain {
                         }
                     }
                     else {
-                        progress "\n\nDNS ERROR - No A or AAAA record for $config{CREATEDOMAIN}.\n";
+                        progress "\n\nDNS ERROR - No \"A\" or \"AAAA\" record for $config{CREATEDOMAIN}.\n";
                     }
                 }
             }
@@ -2058,9 +2058,9 @@ sub setCreateDomain {
             }
             if ($good) {last;}
             else {
-                progress("\n\nDNS ERROR - none of the MX records for $config{CREATEDOMAIN}\n");
+                progress("\n\nDNS ERROR - none of the \"MX\" records for $config{CREATEDOMAIN}\n");
                 progress("resolve to this host\n");
-                progress("It is suggested that the MX record resolve to this host\n");
+                progress("It is suggested that the \"MX\" record resolve to this host.\n");
                 if (askYN("Re-Enter domain name?", "Yes") eq "no") {
                     last;
                 }
@@ -2758,36 +2758,60 @@ sub changePublicServiceHostname {
 }
 
 sub getDnsRecords {
-    my $name = shift;
-    my $qtype = shift;
+    my $hostname = shift;
+    my $query_type = shift;
 
-    my $res = Net::DNS::Resolver->new;
-    my @servers = $res->nameservers();
-    my $ans = $res->search($name, $qtype);
+    progress("\n\nQuerying DNS for \"$query_type\" record of $hostname...");
 
+    my $resolver = Net::DNS::Resolver->new;
+    my $ans = $resolver->search($hostname, $query_type);
+
+    if (defined $ans){
+        progress("done.");
+    }
     return $ans;
 }
 
 sub lookupHostName {
-    my $name = shift;
-    my $qtype = shift;
+    my $hostname = shift;
+    my $query_type = shift;
 
-    my $res = Net::DNS::Resolver->new;
-    my @servers = $res->nameservers();
-    my $ans = $res->search($name, $qtype);
-    if (!defined($ans)) {
-        progress("No results returned for $qtype lookup of $name\n");
-        progress("Checked nameservers:\n");
-        foreach (@servers) {
-            progress("\t$_\n");
+    progress("\n\nQuerying DNS for \"$query_type\" record of current hostname $hostname...");
+
+    # perform DNS lookup for asked query_type for supplied hostname
+    my $resolver = Net::DNS::Resolver->new;
+    my $ans = $resolver->search($hostname, $query_type);
+    if (!defined $ans) {
+        progress("\n\tNo results returned for \"$query_type\" record of current hostname $hostname\n");
+        progress("\nChecked nameservers:\n");
+        foreach my $server ($resolver->nameservers()) {
+            progress("\t$server\n");
         }
+        # return if no record was found
         return 1;
     }
-    else {
-        #progress ("Received answer:\n");
-        #progress ($ans->string()."\n");
-        return 0;
+
+    # else check if resolved IP address is pointing to a loopback device or interface
+    foreach my $rr ($ans->answer) {
+        next unless $rr->type eq 'A';
+        my $ip = $rr->address;
+        # regexp based check that matches IP to check if its a possible loopback addresses (covers both IPv4 and IPv6)
+        if ($ip =~ /^127\.|^::1$/) {
+            progress("\n\tError: Resolved IP address $ip for current hostname $hostname is pointing to a loopback device or interface");
+            return 1;
+        }
+        # check if IP address belongs to a local network interface on the current host by
+        # looking for "scope host" in interface detail
+        my $ipo = `ip addr show $ip 2>&1`;
+        if ($? == 0 && $ipo =~ /scope host/) {
+            progress("\n\tError: Resolved IP address $ip for current hostname $hostname is pointing to a loopback device or interface");
+            return 1;
+        }
     }
+
+    # if everything is okay
+    progress("done.");
+    return 0;
 }
 
 sub setHostName {
@@ -2797,8 +2821,8 @@ sub setHostName {
             askNonBlank("Please enter the logical hostname for this host",
                 $config{HOSTNAME});
         if (lookupHostName($config{HOSTNAME}, 'A')) {
-            progress("\n\nDNS ERROR resolving $config{HOSTNAME}\n");
-            progress("It is suggested that the hostname be resolvable via DNS\n");
+            progress("\n\nDNS ERROR - resolving $config{HOSTNAME}\n");
+            progress("It is recommended that the hostname be resolvable via DNS and the resolved IP address not point to a loopback device\n");
             if (askYN("Re-Enter hostname", "Yes") eq "no") {
                 last;
             }
@@ -2925,8 +2949,8 @@ sub setPublicServiceHostname {
             askNonBlank("Please enter the Public Service hostname (FQDN):",
                 $config{PUBLICSERVICEHOSTNAME});
         if (lookupHostName($config{PUBLICSERVICEHOSTNAME}, 'A')) {
-            progress("\n\nDNS ERROR resolving $config{PUBLICSERVICEHOSTNAME}\n");
-            progress("It is suggested that the Public Service Hostname be resolvable via DNS\n");
+            progress("\n\nDNS ERROR - resolving $config{PUBLICSERVICEHOSTNAME}\n");
+            progress("It is suggested that the Public Service Hostname be resolvable via DNS.\n");
             if (askYN("Re-Enter Public Service Hostname", "Yes") eq "no") {
                 last;
             }
@@ -4586,9 +4610,9 @@ sub configCASetup {
 
 sub updatePasswordsInLocalConfig {
 
-    if(isEnabled("carbonio-directory-server")){
+    if (isEnabled("carbonio-directory-server")) {
 
-     # zmldappasswd starts ldap and re-applies the ldif
+        # zmldappasswd starts ldap and re-applies the ldif
         if ($ldapRootPassChanged || $ldapAdminPassChanged || $ldapRepChanged || $ldapPostChanged || $ldapAmavisChanged || $ldapNginxChanged) {
 
             if ($ldapRootPassChanged) {
@@ -4653,12 +4677,13 @@ sub updatePasswordsInLocalConfig {
             progress("done.\n");
             startLdap();
         }
-    }else{
+    }
+    else {
         # this sets the password for each component if they are enabled, use full in case of multiserver
         # especially when we add components to existing configured node
-        if(isEnabled("carbonio-mta") && ($ldapPostChanged || $ldapAmavisChanged) ){
+        if (isEnabled("carbonio-mta") && ($ldapPostChanged || $ldapAmavisChanged)) {
 
-           if ($ldapPostChanged == 1) {
+            if ($ldapPostChanged == 1) {
                 progress("Setting postfix password...");
                 if ($config{LDAPHOST} eq $config{HOSTNAME}) {
                     runAsZextras("/opt/zextras/bin/zmldappasswd -p $config{LDAPPOSTPASS}");
@@ -4680,7 +4705,7 @@ sub updatePasswordsInLocalConfig {
             }
         }
 
-        if(isEnabled("carbonio-proxy") && ($ldapNginxChanged) ){
+        if (isEnabled("carbonio-proxy") && ($ldapNginxChanged)) {
             if ($ldapNginxChanged == 1) {
                 progress("Setting nginx password...");
                 if ($config{LDAPHOST} eq $config{HOSTNAME}) {
@@ -5559,6 +5584,8 @@ sub configCreateDomain {
 
             progress("Setting default domain name...");
             my $rc = setLdapGlobalConfig("zimbraDefaultDomainName", $config{CREATEDOMAIN});
+            progress(($rc == 0) ? "done.\n" : "failed.\n");
+
             progress("Setting value of postfix myorigin...");
             my $rc = setLdapGlobalConfig("zimbraMtaMyOrigin", $config{CREATEDOMAIN});
             progress(($rc == 0) ? "done.\n" : "failed.\n");
@@ -5607,6 +5634,13 @@ sub configCreateDomain {
                 progress(($rc == 0) ? "done.\n" : "failed.\n");
             }
 
+            # set carbonioNotificationFrom & carbonioNotificationRecipients global config attributes
+            progress("Setting infrastrcuture notification sender and recipients accounts...");
+            my $rc = setLdapGlobalConfig(
+                'carbonioNotificationFrom', "$config{CREATEADMIN}",
+                'carbonioNotificationRecipients', "$config{CREATEADMIN}"
+            );
+            progress(($rc == 0) ? "done.\n" : "failed.\n");
         }
 
         if ($config{DOTRAINSA} eq "yes") {
@@ -5992,7 +6026,7 @@ sub applyConfig {
     }
 
     if ($newinstall != 1) {
-        if ((isInstalled("carbonio-proxy") && isEnabled("carbonio-proxy")) && ($config{HTTPPROXY} eq "TRUE") ) {
+        if ((isInstalled("carbonio-proxy") && isEnabled("carbonio-proxy")) && ($config{HTTPPROXY} eq "TRUE")) {
             setLdapServerConfig($config{HOSTNAME}, 'zimbraMailProxyPort', $config{HTTPPROXYPORT});
             setLdapServerConfig($config{HOSTNAME}, 'zimbraMailSSLProxyPort', $config{HTTPSPROXYPORT});
         }
