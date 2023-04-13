@@ -34,5 +34,4 @@
    { name => "zm-zcs" },
    { name => "zm-zimlets" },
    { name => "zm-oauth-social" },
-   { name => "zm-gql" },
 );
