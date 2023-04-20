@@ -147,6 +147,7 @@ main()
    Copy ${repoDir}/zm-core-utils/src/libexec/icalmig                                                ${repoDir}/zm-build/${currentPackage}/opt/zextras/libexec/icalmig
    Copy ${repoDir}/zm-core-utils/src/libexec/zcs                                                    ${repoDir}/zm-build/${currentPackage}/opt/zextras/libexec/zcs
    Copy ${repoDir}/zm-core-utils/src/libexec/carbonio                                               ${repoDir}/zm-build/${currentPackage}/opt/zextras/libexec/carbonio
+   Copy ${repoDir}/zm-core-utils/src/libexec/certbot                                                ${repoDir}/zm-build/${currentPackage}/opt/zextras/libexec/certbot
    Copy ${repoDir}/zm-core-utils/src/libexec/postfix-prometheus                                     ${repoDir}/zm-build/${currentPackage}/opt/zextras/libexec/postfix-prometheus
    Copy ${repoDir}/zm-core-utils/src/libexec/zmaltermimeconfig                                      ${repoDir}/zm-build/${currentPackage}/opt/zextras/libexec/zmaltermimeconfig
    Copy ${repoDir}/zm-core-utils/src/libexec/zmantispamdbinit                                       ${repoDir}/zm-build/${currentPackage}/opt/zextras/libexec/zmantispamdbinit
@@ -374,6 +375,7 @@ main()
    Copy ${repoDir}/zm-ldap-utilities/src/ldap/migration/migrate20141022-AddTLSBits.pl               ${repoDir}/zm-build/${currentPackage}/opt/zextras/libexec/scripts/migrate20141022-AddTLSBits.pl
    Copy ${repoDir}/zm-ldap-utilities/src/ldap/migration/migrate20150930-AddSyncpovSessionlog.pl     ${repoDir}/zm-build/${currentPackage}/opt/zextras/libexec/scripts/migrate20150930-AddSyncpovSessionlog.pl
    Copy ${repoDir}/zm-ldap-utilities/src/ldap/migration/migrate20230217-AddArgon2.pl                ${repoDir}/zm-build/${currentPackage}/opt/zextras/libexec/scripts/migrate20230217-AddArgon2.pl
+   Copy ${repoDir}/zm-ldap-utilities/src/ldap/migration/migrate-23.5.0-01-COS-AddFeatures.pl        ${repoDir}/zm-build/${currentPackage}/opt/zextras/libexec/scripts/migrate-23.5.0-01-COS-AddFeatures.pl
    Copy ${repoDir}/zm-ldap-utilities/src/libexec/zmldapanon                                         ${repoDir}/zm-build/${currentPackage}/opt/zextras/libexec/zmldapanon
    Copy ${repoDir}/zm-ldap-utilities/src/libexec/zmldapapplyldif                                    ${repoDir}/zm-build/${currentPackage}/opt/zextras/libexec/zmldapapplyldif
    Copy ${repoDir}/zm-ldap-utilities/src/libexec/zmldapenable-mmr                                   ${repoDir}/zm-build/${currentPackage}/opt/zextras/libexec/zmldapenable-mmr

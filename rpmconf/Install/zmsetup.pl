@@ -61,6 +61,7 @@ our %saved = ();
 
 my @packageList = (
     "carbonio-core",
+    "carbonio-clamav",
     "carbonio-directory-server",
     "carbonio-logger",
     "carbonio-mta",
@@ -71,7 +72,7 @@ my @packageList = (
 
 my %packageServiceMap = (
     amavis             => "carbonio-mta",
-    antivirus          => "carbonio-mta",
+    antivirus          => "carbonio-clamav",
     antispam           => "carbonio-mta",
     opendkim           => "carbonio-mta",
     cbpolicyd          => "carbonio-mta",
@@ -2766,9 +2767,6 @@ sub getDnsRecords {
     my $resolver = Net::DNS::Resolver->new;
     my $ans = $resolver->search($hostname, $query_type);
 
-    if (defined $ans){
-        progress("done.");
-    }
     return $ans;
 }
 
@@ -2810,7 +2808,6 @@ sub lookupHostName {
     }
 
     # if everything is okay
-    progress("done.");
     return 0;
 }
 
@@ -3097,6 +3094,16 @@ sub setEnabledDependencies {
             $config{RUNCBPOLICYD} = (isServiceEnabled("cbpolicyd") ? "yes" : "no");
         }
     }
+
+    if (isEnabled("carbonio-clamav")) {
+        if ($newinstall) {
+            $config{RUNAV} = "yes";
+        }
+        else {
+            $config{RUNAV} = (isServiceEnabled("antivirus") ? "yes" : "no");
+        }
+    }
+
     if (isInstalled("carbonio-proxy")) {
         setUseProxy();
     }
@@ -3403,27 +3410,18 @@ sub createMtaMenu {
         };
         $i++;
         $$lm{menuitems}{$i} = {
-            "prompt"   => "Enable Clam AV:",
-            "var"      => \$config{RUNAV},
-            "callback" => \&toggleYN,
-            "arg"      => "RUNAV",
-        };
-        $i++;
-        $$lm{menuitems}{$i} = {
             "prompt"   => "Enable OpenDKIM:",
             "var"      => \$config{RUNDKIM},
             "callback" => \&toggleYN,
             "arg"      => "RUNDKIM",
         };
         $i++;
-        if ($config{RUNAV} eq "yes") {
-            $$lm{menuitems}{$i} = {
-                "prompt"   => "Notification address for AV alerts:",
-                "var"      => \$config{AVUSER},
-                "callback" => \&setAvUser,
-            };
-            $i++;
-        }
+        $$lm{menuitems}{$i} = {
+            "prompt"   => "Notification address for AV alerts:",
+            "var"      => \$config{AVUSER},
+            "callback" => \&setAvUser,
+        };
+        $i++;
         if ($config{LDAPPOSTPASS} eq "") {
             $config{LDAPPOSTPASSSET} = "UNSET";
         }
@@ -3860,10 +3858,22 @@ sub createMainMenu {
     foreach my $package (@packageList) {
         if ($package eq "carbonio-core") {next;}
         if ($package eq "carbonio-memcached") {next;}
+
         if (defined($installedPackages{$package})) {
             if ($package =~ /logger/) {
                 $mm{menuitems}{$i} = {
                     "prompt"   => "$package:",
+                    "var"      => \$enabledPackages{$package},
+                    "callback" => \&toggleEnabled,
+                    "arg"      => $package
+                };
+                $i++;
+                next;
+            }
+            # override "prompt" of carbonio-clamav package menu
+            if ($package eq "carbonio-clamav") {
+                $mm{menuitems}{$i} = {
+                    "prompt"   => "carbonio-antivirus:",
                     "var"      => \$enabledPackages{$package},
                     "callback" => \&toggleEnabled,
                     "arg"      => $package
@@ -5842,6 +5852,11 @@ sub configSetEnabledServices {
         }
         $p =~ s/carbonio-//;
         if ($p eq "appserver") {$p = "mailbox";}
+
+        # do not push antivirus if already exists, required to enable support for single & multi-node installs
+        if ($p eq "clamav" && !grep(/^antivirus$/, @installedServiceList)) {$p = "antivirus";}
+        # do not add clamav as service, it is known as antivirus
+        if ($p eq "clamav") {next;}
         push(@installedServiceList, ('zimbraServiceInstalled', "$p"));
     }
 
@@ -5861,6 +5876,10 @@ sub configSetEnabledServices {
                     }
                 }
             }
+            # do not push antivirus if already exists, required to enable support for single & multi-node installs
+            if ($p eq "clamav" && !grep(/^antivirus$/, @enabledServiceList)) {$p = "antivirus";}
+            # do not add clamav as service, it is known as antivirus
+            if ($p eq "clamav") {next;}
             push(@enabledServiceList, 'zimbraServiceEnabled', "$p");
         }
     }
