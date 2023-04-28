@@ -100,6 +100,7 @@ my @webappList = (
 my %installedPackages = ();
 our %installedWebapps = ();
 my %prevInstalledPackages = ();
+my %prevEnabledServices = ();
 my %enabledPackages = ();
 my %enabledServices = ();
 
@@ -167,8 +168,14 @@ if (isInstalled("carbonio-directory-server")) {
 
 if (!$newinstall) {
     if (-f "/opt/zextras/conf/ca/ca.pem") {
-        progress("Adding /opt/zextras/conf/ca/ca.pem to cacerts\n");
-        runAsZextras("/opt/zextras/bin/zmcertmgr addcacert /opt/zextras/conf/ca/ca.pem");
+        progress("Adding /opt/zextras/conf/ca/ca.pem to cacerts...");
+        my $ec = runAsZextras("/opt/zextras/bin/zmcertmgr addcacert /opt/zextras/conf/ca/ca.pem");
+        if ($ec != 0) {
+            progress("failed.\n");
+        }
+        else {
+            progress("done.\n");
+        }
     }
 }
 
@@ -453,9 +460,6 @@ sub getInstalledPackages {
             chomp;
             if (/zimbraServiceInstalled:\s(.*)/) {
                 my $service = $1;
-                if ($service eq "imapproxy") {
-                    $service = "proxy";
-                }
                 if (exists $packageServiceMap{$service}) {
                     detail("Marking $service as previously installed.")
                         if ($debug);
@@ -575,6 +579,7 @@ sub isEnabled {
                         if ($debug);
                     $enabledPackages{$packageServiceMap{$service}} = "Enabled";
                     $enabledServices{$service} = "Enabled";
+                    $prevEnabledServices{$service} = "Enabled";
                 }
                 else {
                     progress("WARNING: Unknown package installed for $service.\n");
@@ -4874,9 +4879,15 @@ sub configSetupLdap {
 sub configLDAPSchemaVersion {
     return if ($haveSetLdapSchemaVersion);
     if (isEnabled("carbonio-directory-server")) {
-        progress("Updating LDAP Schema version to '$ldapSchemaVersion'\n");
-        setLdapGlobalConfig('zimbraLDAPSchemaVersion', $ldapSchemaVersion);
-        $haveSetLdapSchemaVersion = 1;
+        progress("Updating LDAP Schema version to '$ldapSchemaVersion'...");
+        my $ec = setLdapGlobalConfig('zimbraLDAPSchemaVersion', $ldapSchemaVersion);
+        if ($ec != 0) {
+            progress("failed.\n");
+        }
+        else {
+            $haveSetLdapSchemaVersion = 1;
+            progress("done.\n");
+        }
     }
 }
 
@@ -5885,6 +5896,16 @@ sub configSetEnabledServices {
     }
 
     progress("Setting services on $config{HOSTNAME}...");
+
+    # add service-discover as enabled service if it was in zimbraServiceEnabled before.
+    # service-discover is special case which is not handled by regular logic, since it
+    # has no explicit package mapping. we also do not add it to installedServiceList
+    # for the same reason.
+    if( $prevEnabledServices{"service-discover"} && $prevEnabledServices{"service-discover"} eq "Enabled"){
+        detail("Restoring service-discover serviceEnabled state from previous install.");
+        push(@enabledServiceList, ('zimbraServiceEnabled', 'service-discover'));
+    }
+
     setLdapServerConfig($config{HOSTNAME}, @installedServiceList);
     setLdapServerConfig($config{HOSTNAME}, @enabledServiceList);
     progress("done.\n");
