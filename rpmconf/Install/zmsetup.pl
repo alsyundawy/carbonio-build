@@ -209,14 +209,16 @@ if (!$newinstall) {
     my $rc = runAsZextras("/opt/zextras/libexec/zmldapupdateldif");
 }
 
-if ($ldapConfigured ||
-    (($config{LDAPHOST} ne $config{HOSTNAME}) && ldapIsAvailable())) {
+if ($options{c}) {
+    loadConfig($options{c});
+}
+
+if ($ldapConfigured || (($config{LDAPHOST} ne $config{HOSTNAME}) && ldapIsAvailable())) {
     setLdapDefaults();
     getAvailableComponents();
 }
 
 if ($options{c}) {
-    loadConfig($options{c});
     applyConfig();
 }
 else {
@@ -5656,7 +5658,7 @@ sub configCreateDomain {
             }
 
             # set carbonioNotificationFrom & carbonioNotificationRecipients global config attributes
-            progress("Setting infrastrcuture notification sender and recipients accounts...");
+            progress("Setting infrastructure notification sender and recipients accounts...");
             my $rc = setLdapGlobalConfig(
                 'carbonioNotificationFrom', "$config{CREATEADMIN}",
                 'carbonioNotificationRecipients', "$config{CREATEADMIN}"
@@ -5726,7 +5728,7 @@ sub configCreateDomain {
                 progress(($rc == 0) ? "done.\n" : "failed.\n");
             }
 
-            progress("Setting spam training and Anti-virus quarantine accounts...");
+            progress("Setting spam, training and anti-virus quarantine accounts...");
             my $rc = setLdapGlobalConfig(
                 'zimbraSpamIsSpamAccount', "$config{TRAINSASPAM}",
                 'zimbraSpamIsNotSpamAccount', "$config{TRAINSAHAM}",
