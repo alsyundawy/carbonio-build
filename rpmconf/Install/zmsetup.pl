@@ -107,8 +107,6 @@ my %enabledServices = ();
 my %installStatus = ();
 our %configStatus = ();
 
-our $curVersion = "";
-my ($curVersionMinor, $curVersionMajor, $curVersionMicroMicro, $curVersionType, $curVersionBuild);
 our $newinstall = 1;
 chomp(my $ldapSchemaVersion = do {
     local $/ = undef;
@@ -228,13 +226,6 @@ else {
     }
     mainMenu();
 }
-
-setLdapServerConfig($config{HOSTNAME}, 'zimbraServerVersion', $curVersion);
-setLdapServerConfig($config{HOSTNAME}, 'zimbraServerVersionMajor', $curVersionMajor);
-setLdapServerConfig($config{HOSTNAME}, 'zimbraServerVersionMinor', $curVersionMinor);
-setLdapServerConfig($config{HOSTNAME}, 'zimbraServerVersionMicro', $curVersionMicroMicro);
-setLdapServerConfig($config{HOSTNAME}, 'zimbraServerVersionType', $curVersionType);
-setLdapServerConfig($config{HOSTNAME}, 'zimbraServerVersionBuild', $curVersionBuild);
 
 close LOGFILE;
 chmod 0600, $logfile;
@@ -6073,13 +6064,6 @@ sub applyConfig {
             setLdapServerConfig($config{HOSTNAME}, 'zimbraMailSSLProxyPort', $config{HTTPSPROXYPORT});
         }
     }
-
-    setLdapServerConfig($config{HOSTNAME}, 'zimbraServerVersion', $curVersion);
-    setLdapServerConfig($config{HOSTNAME}, 'zimbraServerVersionMajor', $curVersionMajor);
-    setLdapServerConfig($config{HOSTNAME}, 'zimbraServerVersionMinor', $curVersionMinor);
-    setLdapServerConfig($config{HOSTNAME}, 'zimbraServerVersionMicro', $curVersionMicroMicro);
-    setLdapServerConfig($config{HOSTNAME}, 'zimbraServerVersionType', $curVersionType);
-    setLdapServerConfig($config{HOSTNAME}, 'zimbraServerVersionBuild', $curVersionBuild);
 
     if ($config{STARTSERVERS} eq "yes") {
         if (isEnabled("carbonio-appserver")) {
