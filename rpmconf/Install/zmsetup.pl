@@ -1107,11 +1107,6 @@ sub setLdapDefaults {
     if ($serverid ne "") {
 
         $config{zimbraIPMode} = getLdapServerValue("zimbraIPMode");
-        $config{zimbraDNSMasterIP} = getLdapServerValue("zimbraDNSMasterIP");
-        $config{zimbraDNSUseTCP} = getLdapServerValue("zimbraDNSUseTCP");
-        $config{zimbraDNSUseUDP} = getLdapServerValue("zimbraDNSUseUDP");
-        $config{zimbraDNSTCPUpstream} = getLdapServerValue("zimbraDNSTCPUpstream");
-
         $config{IMAPPORT} = getLdapServerValue("zimbraImapBindPort");
         $config{IMAPSSLPORT} = getLdapServerValue("zimbraImapSSLBindPort");
         $config{REMOTEIMAPBINDPORT} = getLdapServerValue("zimbraRemoteImapBindPort");
@@ -2198,20 +2193,6 @@ sub setAmavisVirusQuarantine {
             $config{VIRUSQUARANTINE} = $new;
             last;
         }
-    }
-}
-
-sub setMasterDNSIP {
-    while (1) {
-        my $new =
-            ask("IP Address(es) of Master DNS Server(s), space separated:", $config{zimbraDNSMasterIP});
-        my @IPs = split(' ', $new);
-        unless (!validIPAddress(@IPs)) {
-            progress("Supplied IP address(es) must be valid\n");
-            next;
-        }
-        $config{zimbraDNSMasterIP} = $new;
-        last;
     }
 }
 
