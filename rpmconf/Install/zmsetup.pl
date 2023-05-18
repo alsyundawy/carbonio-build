@@ -100,14 +100,13 @@ my @webappList = (
 my %installedPackages = ();
 our %installedWebapps = ();
 my %prevInstalledPackages = ();
+my %prevEnabledServices = ();
 my %enabledPackages = ();
 my %enabledServices = ();
 
 my %installStatus = ();
 our %configStatus = ();
 
-our $curVersion = "";
-my ($curVersionMinor, $curVersionMajor, $curVersionMicroMicro, $curVersionType, $curVersionBuild);
 our $newinstall = 1;
 chomp(my $ldapSchemaVersion = do {
     local $/ = undef;
@@ -167,8 +166,14 @@ if (isInstalled("carbonio-directory-server")) {
 
 if (!$newinstall) {
     if (-f "/opt/zextras/conf/ca/ca.pem") {
-        progress("Adding /opt/zextras/conf/ca/ca.pem to cacerts\n");
-        runAsZextras("/opt/zextras/bin/zmcertmgr addcacert /opt/zextras/conf/ca/ca.pem");
+        progress("Adding /opt/zextras/conf/ca/ca.pem to cacerts...");
+        my $ec = runAsZextras("/opt/zextras/bin/zmcertmgr addcacert /opt/zextras/conf/ca/ca.pem");
+        if ($ec != 0) {
+            progress("failed.\n");
+        }
+        else {
+            progress("done.\n");
+        }
     }
 }
 
@@ -202,14 +207,16 @@ if (!$newinstall) {
     my $rc = runAsZextras("/opt/zextras/libexec/zmldapupdateldif");
 }
 
-if ($ldapConfigured ||
-    (($config{LDAPHOST} ne $config{HOSTNAME}) && ldapIsAvailable())) {
+if ($options{c}) {
+    loadConfig($options{c});
+}
+
+if ($ldapConfigured || (($config{LDAPHOST} ne $config{HOSTNAME}) && ldapIsAvailable())) {
     setLdapDefaults();
     getAvailableComponents();
 }
 
 if ($options{c}) {
-    loadConfig($options{c});
     applyConfig();
 }
 else {
@@ -219,13 +226,6 @@ else {
     }
     mainMenu();
 }
-
-setLdapServerConfig($config{HOSTNAME}, 'zimbraServerVersion', $curVersion);
-setLdapServerConfig($config{HOSTNAME}, 'zimbraServerVersionMajor', $curVersionMajor);
-setLdapServerConfig($config{HOSTNAME}, 'zimbraServerVersionMinor', $curVersionMinor);
-setLdapServerConfig($config{HOSTNAME}, 'zimbraServerVersionMicro', $curVersionMicroMicro);
-setLdapServerConfig($config{HOSTNAME}, 'zimbraServerVersionType', $curVersionType);
-setLdapServerConfig($config{HOSTNAME}, 'zimbraServerVersionBuild', $curVersionBuild);
 
 close LOGFILE;
 chmod 0600, $logfile;
@@ -453,9 +453,6 @@ sub getInstalledPackages {
             chomp;
             if (/zimbraServiceInstalled:\s(.*)/) {
                 my $service = $1;
-                if ($service eq "imapproxy") {
-                    $service = "proxy";
-                }
                 if (exists $packageServiceMap{$service}) {
                     detail("Marking $service as previously installed.")
                         if ($debug);
@@ -575,6 +572,7 @@ sub isEnabled {
                         if ($debug);
                     $enabledPackages{$packageServiceMap{$service}} = "Enabled";
                     $enabledServices{$service} = "Enabled";
+                    $prevEnabledServices{$service} = "Enabled";
                 }
                 else {
                     progress("WARNING: Unknown package installed for $service.\n");
@@ -1109,11 +1107,6 @@ sub setLdapDefaults {
     if ($serverid ne "") {
 
         $config{zimbraIPMode} = getLdapServerValue("zimbraIPMode");
-        $config{zimbraDNSMasterIP} = getLdapServerValue("zimbraDNSMasterIP");
-        $config{zimbraDNSUseTCP} = getLdapServerValue("zimbraDNSUseTCP");
-        $config{zimbraDNSUseUDP} = getLdapServerValue("zimbraDNSUseUDP");
-        $config{zimbraDNSTCPUpstream} = getLdapServerValue("zimbraDNSTCPUpstream");
-
         $config{IMAPPORT} = getLdapServerValue("zimbraImapBindPort");
         $config{IMAPSSLPORT} = getLdapServerValue("zimbraImapSSLBindPort");
         $config{REMOTEIMAPBINDPORT} = getLdapServerValue("zimbraRemoteImapBindPort");
@@ -2200,20 +2193,6 @@ sub setAmavisVirusQuarantine {
             $config{VIRUSQUARANTINE} = $new;
             last;
         }
-    }
-}
-
-sub setMasterDNSIP {
-    while (1) {
-        my $new =
-            ask("IP Address(es) of Master DNS Server(s), space separated:", $config{zimbraDNSMasterIP});
-        my @IPs = split(' ', $new);
-        unless (!validIPAddress(@IPs)) {
-            progress("Supplied IP address(es) must be valid\n");
-            next;
-        }
-        $config{zimbraDNSMasterIP} = $new;
-        last;
     }
 }
 
@@ -4874,9 +4853,15 @@ sub configSetupLdap {
 sub configLDAPSchemaVersion {
     return if ($haveSetLdapSchemaVersion);
     if (isEnabled("carbonio-directory-server")) {
-        progress("Updating LDAP Schema version to '$ldapSchemaVersion'\n");
-        setLdapGlobalConfig('zimbraLDAPSchemaVersion', $ldapSchemaVersion);
-        $haveSetLdapSchemaVersion = 1;
+        progress("Updating LDAP Schema version to '$ldapSchemaVersion'...");
+        my $ec = setLdapGlobalConfig('zimbraLDAPSchemaVersion', $ldapSchemaVersion);
+        if ($ec != 0) {
+            progress("failed.\n");
+        }
+        else {
+            $haveSetLdapSchemaVersion = 1;
+            progress("done.\n");
+        }
     }
 }
 
@@ -5645,7 +5630,7 @@ sub configCreateDomain {
             }
 
             # set carbonioNotificationFrom & carbonioNotificationRecipients global config attributes
-            progress("Setting infrastrcuture notification sender and recipients accounts...");
+            progress("Setting infrastructure notification sender and recipients accounts...");
             my $rc = setLdapGlobalConfig(
                 'carbonioNotificationFrom', "$config{CREATEADMIN}",
                 'carbonioNotificationRecipients', "$config{CREATEADMIN}"
@@ -5715,7 +5700,7 @@ sub configCreateDomain {
                 progress(($rc == 0) ? "done.\n" : "failed.\n");
             }
 
-            progress("Setting spam training and Anti-virus quarantine accounts...");
+            progress("Setting spam, training and anti-virus quarantine accounts...");
             my $rc = setLdapGlobalConfig(
                 'zimbraSpamIsSpamAccount', "$config{TRAINSASPAM}",
                 'zimbraSpamIsNotSpamAccount', "$config{TRAINSAHAM}",
@@ -5885,6 +5870,16 @@ sub configSetEnabledServices {
     }
 
     progress("Setting services on $config{HOSTNAME}...");
+
+    # add service-discover as enabled service if it was in zimbraServiceEnabled before.
+    # service-discover is special case which is not handled by regular logic, since it
+    # has no explicit package mapping. we also do not add it to installedServiceList
+    # for the same reason.
+    if( $prevEnabledServices{"service-discover"} && $prevEnabledServices{"service-discover"} eq "Enabled"){
+        detail("Restoring service-discover serviceEnabled state from previous install.");
+        push(@enabledServiceList, ('zimbraServiceEnabled', 'service-discover'));
+    }
+
     setLdapServerConfig($config{HOSTNAME}, @installedServiceList);
     setLdapServerConfig($config{HOSTNAME}, @enabledServiceList);
     progress("done.\n");
@@ -6050,13 +6045,6 @@ sub applyConfig {
             setLdapServerConfig($config{HOSTNAME}, 'zimbraMailSSLProxyPort', $config{HTTPSPROXYPORT});
         }
     }
-
-    setLdapServerConfig($config{HOSTNAME}, 'zimbraServerVersion', $curVersion);
-    setLdapServerConfig($config{HOSTNAME}, 'zimbraServerVersionMajor', $curVersionMajor);
-    setLdapServerConfig($config{HOSTNAME}, 'zimbraServerVersionMinor', $curVersionMinor);
-    setLdapServerConfig($config{HOSTNAME}, 'zimbraServerVersionMicro', $curVersionMicroMicro);
-    setLdapServerConfig($config{HOSTNAME}, 'zimbraServerVersionType', $curVersionType);
-    setLdapServerConfig($config{HOSTNAME}, 'zimbraServerVersionBuild', $curVersionBuild);
 
     if ($config{STARTSERVERS} eq "yes") {
         if (isEnabled("carbonio-appserver")) {

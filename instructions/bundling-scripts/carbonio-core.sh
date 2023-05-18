@@ -319,6 +319,7 @@ main()
    Copy ${repoDir}/zm-db-conf/src/db/migration/migrate20210506-BriefcaseApi.pl                      ${repoDir}/zm-build/${currentPackage}/opt/zextras/libexec/scripts/migrate20210506-BriefcaseApi.pl
    Copy ${repoDir}/zm-db-conf/src/db/migration/migrate20210809-UnsubscribeFolder.pl                 ${repoDir}/zm-build/${currentPackage}/opt/zextras/libexec/scripts/migrate20210809-UnsubscribeFolder.pl
    Copy ${repoDir}/zm-db-conf/src/db/migration/migrate20221110-AddIndexLocatorOnMailItem.pl         ${repoDir}/zm-build/${currentPackage}/opt/zextras/libexec/scripts/migrate20221110-AddIndexLocatorOnMailItem.pl
+   Copy ${repoDir}/zm-db-conf/src/db/migration/migrate20230329-BriefcaseRemoval.pl                  ${repoDir}/zm-build/${currentPackage}/opt/zextras/libexec/scripts/migrate20230329-BriefcaseRemoval.pl
    Copy ${repoDir}/zm-db-conf/src/db/migration/migrateAmavisLdap20050810.pl                         ${repoDir}/zm-build/${currentPackage}/opt/zextras/libexec/scripts/migrateAmavisLdap20050810.pl
    Copy ${repoDir}/zm-db-conf/src/db/migration/migrateClearSpamFlag.pl                              ${repoDir}/zm-build/${currentPackage}/opt/zextras/libexec/scripts/migrateClearSpamFlag.pl
    Copy ${repoDir}/zm-db-conf/src/db/migration/migrateLargeMetadata.pl                              ${repoDir}/zm-build/${currentPackage}/opt/zextras/libexec/scripts/migrateLargeMetadata.pl
@@ -394,6 +395,7 @@ main()
    Copy ${repoDir}/zm-ldap-utilities/src/libexec/zmslapindex                                        ${repoDir}/zm-build/${currentPackage}/opt/zextras/libexec/zmslapindex
    Copy ${repoDir}/zm-ldap-utilities/src/libexec/zmstat-ldap                                        ${repoDir}/zm-build/${currentPackage}/opt/zextras/libexec/zmstat-ldap
    Copy ${repoDir}/zm-ldap-utilities/src/libexec/ldapattributeupdate                                ${repoDir}/zm-build/${currentPackage}/opt/zextras/libexec/ldapattributeupdate
+   Copy ${repoDir}/zm-ldap-utilities/src/libexec/ldapattributecleanup                                ${repoDir}/zm-build/${currentPackage}/opt/zextras/libexec/ldapattributecleanup
 
    Copy ${repoDir}/zm-mta/cbpolicyd.conf.in                                                         ${repoDir}/zm-build/${currentPackage}/opt/zextras/conf/cbpolicyd.conf.in
    Copy ${repoDir}/zm-mta/clamd.conf.in                                                             ${repoDir}/zm-build/${currentPackage}/opt/zextras/conf/clamd.conf.in
