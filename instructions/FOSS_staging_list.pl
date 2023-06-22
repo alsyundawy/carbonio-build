@@ -64,14 +64,6 @@
       },
    },
    {
-      "dir"         => "zm-openid-consumer-store",
-      "ant_targets" => ["dist-package"],
-      "stage_cmd"   => sub {
-         SysExec("mkdir -p $CFG{BUILD_DIR}/zm-openid-consumer-store/build/dist");
-         SysExec("cp -f -r build/dist $CFG{BUILD_DIR}/zm-openid-consumer-store/build/");
-      },
-   },
-   {
       "dir"         => "zm-clam-scanner-store",
       "ant_targets" => ["publish-local"],
       "stage_cmd"   => sub {
@@ -203,15 +195,6 @@
       "ant_targets" => undef,
       "stage_cmd"   => sub {
          SysExec("cp -f -r ../zm-jetty-conf $CFG{BUILD_DIR}");
-      },
-   },
-   
-   {
-      "dir"         => "zm-oauth-social",
-      "ant_targets" => ["publish-local", "oauth-social-common-jar", "oauth-social-jar"],
-      "stage_cmd"   => sub {
-         SysExec("mkdir -p $CFG{BUILD_DIR}/zm-oauth-social/build/dist");
-         SysExec("cp -f -rp build/zm-oauth-social*.jar $CFG{BUILD_DIR}/zm-oauth-social/build/dist");
       },
    },
 );

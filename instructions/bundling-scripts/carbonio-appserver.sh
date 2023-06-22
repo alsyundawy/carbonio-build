@@ -32,9 +32,7 @@ main() {
   cp -f ${repoDir}/zm-build/rpmconf/Conf/antisamy.xml ${repoDir}/zm-build/${currentPackage}/opt/zextras/conf/antisamy.xml
 
   echo -e "\tCopy extensions-extra files of /opt/zextras/"
-  mkdir -p ${repoDir}/zm-build/${currentPackage}/opt/zextras/extensions-extra/openidconsumer
-  cp -rf ${repoDir}/zm-openid-consumer-store/build/dist/. ${repoDir}/zm-build/${currentPackage}/opt/zextras/extensions-extra/openidconsumer
-  rm -rf ${repoDir}/zm-build/${currentPackage}/opt/zextras/extensions-extra/openidconsumer/extensions-extra
+  mkdir -p ${repoDir}/zm-build/${currentPackage}/opt/zextras/extensions-extra/
 
   echo -e "\tCopy lib files of /opt/zextras/"
 
@@ -43,12 +41,10 @@ main() {
   mkdir -p ${repoDir}/zm-build/${currentPackage}/opt/zextras/libexec
   mkdir -p ${repoDir}/zm-build/${currentPackage}/opt/zextras/lib/ext/clamscanner
   mkdir -p ${repoDir}/zm-build/${currentPackage}/opt/zextras/lib/ext/nginx-lookup
-  mkdir -p ${repoDir}/zm-build/${currentPackage}/opt/zextras/lib/ext/openidconsumer
   mkdir -p ${repoDir}/zm-build/${currentPackage}/opt/zextras/lib/ext/zimbraldaputils
 
   cp -f ${repoDir}/zm-clam-scanner-store/build/dist/zm-clam-scanner-store*.jar ${repoDir}/zm-build/${currentPackage}/opt/zextras/lib/ext/clamscanner/clamscanner.jar
   cp -f ${repoDir}/zm-nginx-lookup-store/build/dist/zm-nginx-lookup-store*.jar ${repoDir}/zm-build/${currentPackage}/opt/zextras/lib/ext/nginx-lookup/nginx-lookup.jar
-  cp -f ${repoDir}/zm-openid-consumer-store/build/dist/guice*.jar ${repoDir}/zm-build/${currentPackage}/opt/zextras/lib/ext/openidconsumer/
 
   #-------------------- Get wars content (service.war, zimbra.war and zimbraAdmin.war) ---------------------------
 
